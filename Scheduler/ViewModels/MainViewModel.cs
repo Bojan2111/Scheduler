@@ -53,12 +53,19 @@ namespace Scheduler.ViewModels
                 {
                     var editedTeam = _context.Teams.Find(SelectedTeam.Id);
 
-                    editedTeam.Name = SelectedTeam.Name;
-                    editedTeam.ShiftPattern = SelectedTeam.ShiftPattern;
-                    editedTeam.CurrentMonth = SelectedTeam.CurrentMonth;
-                    editedTeam.CurrentStartDate = SelectedTeam.CurrentStartDate;
-                    editedTeam.NextMonthStartDate = SelectedTeam.NextMonthStartDate;
-                    editedTeam.NextMonthStartsWithNight = SelectedTeam.NextMonthStartsWithNight;
+                    if (editedTeam != null)
+                    {
+                        editedTeam.Name = SelectedTeam.Name;
+                        editedTeam.ShiftPattern = SelectedTeam.ShiftPattern;
+                        editedTeam.CurrentMonth = SelectedTeam.CurrentMonth;
+                        editedTeam.CurrentStartDate = SelectedTeam.CurrentStartDate;
+                        editedTeam.NextMonthStartDate = SelectedTeam.NextMonthStartDate;
+                        editedTeam.NextMonthStartsWithNight = SelectedTeam.NextMonthStartsWithNight;
+                    }
+                    else
+                    {
+                        _context.Teams.Add(SelectedTeam);
+                    }
 
                     _context.SaveChanges();
 
@@ -89,10 +96,11 @@ namespace Scheduler.ViewModels
         {
             if (SelectedTeam != null)
             {
-                Teams.Remove(SelectedTeam);
                 _context.Teams.Remove(SelectedTeam);
                 _context.SaveChanges();
             }
+
+            LoadContext();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
