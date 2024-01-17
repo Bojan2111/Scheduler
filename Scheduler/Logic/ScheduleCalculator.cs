@@ -10,96 +10,96 @@ namespace Scheduler.Logic
     public class ScheduleCalculator
     {
         //TODO - convert all methods from console app methods to EFC MVVM
-        void GenerateShifts(int teamId, int month, DateTime start)
-        {
-            int year = start.Year;
-            int daysInMonth = DateTime.DaysInMonth(year, month);
+        //void GenerateShifts(int teamId, int month, DateTime start)
+        //{
+        //    int year = start.Year;
+        //    int daysInMonth = DateTime.DaysInMonth(year, month);
 
-            // Select employees within the same team
-            //List<Employee> allEmployeesInTeam = employees.FindAll(o => o.TeamId == teamId);
-            //List<Employee> employeesInTeam = new List<Employee>();
-            //List<int> vtIds = new List<int>();
-            //foreach (Employee e in allEmployeesInTeam)
-            //{
-            //    if (e.TeamRoleId == 1)
-            //    {
-            //        employeesInTeam.Add(e);
-            //        vtIds.Add(e.Id);
-            //    }
-            //}
-            //if (vtIds.Count > 0)
-            //{
-            //    foreach (int idx in vtIds)
-            //    {
-            //        Employee toRemove = allEmployeesInTeam.FirstOrDefault(o => o.Id == idx);
-            //        if (toRemove != null)
-            //        {
-            //            allEmployeesInTeam.Remove(toRemove);
-            //        }
-            //    }
-            //}
-            //List<Employee> sortedVts = employeesInTeam.OrderByDescending(o => o.MonthsEmployed).ToList();
-            //List<Employee> sortedOthers = allEmployeesInTeam.OrderByDescending(o => o.MonthsEmployed).ToList();
-            //foreach (Employee e in sortedOthers)
-            //{
-            //    sortedVts.Add(e);
-            //}
-            List<Employee> employeesInTeam = employees.Where(o => o.TeamId == teamId).ToList();
+        //    // Select employees within the same team
+        //    //List<Employee> allEmployeesInTeam = employees.FindAll(o => o.TeamId == teamId);
+        //    //List<Employee> employeesInTeam = new List<Employee>();
+        //    //List<int> vtIds = new List<int>();
+        //    //foreach (Employee e in allEmployeesInTeam)
+        //    //{
+        //    //    if (e.TeamRoleId == 1)
+        //    //    {
+        //    //        employeesInTeam.Add(e);
+        //    //        vtIds.Add(e.Id);
+        //    //    }
+        //    //}
+        //    //if (vtIds.Count > 0)
+        //    //{
+        //    //    foreach (int idx in vtIds)
+        //    //    {
+        //    //        Employee toRemove = allEmployeesInTeam.FirstOrDefault(o => o.Id == idx);
+        //    //        if (toRemove != null)
+        //    //        {
+        //    //            allEmployeesInTeam.Remove(toRemove);
+        //    //        }
+        //    //    }
+        //    //}
+        //    //List<Employee> sortedVts = employeesInTeam.OrderByDescending(o => o.MonthsEmployed).ToList();
+        //    //List<Employee> sortedOthers = allEmployeesInTeam.OrderByDescending(o => o.MonthsEmployed).ToList();
+        //    //foreach (Employee e in sortedOthers)
+        //    //{
+        //    //    sortedVts.Add(e);
+        //    //}
+        //    List<Employee> employeesInTeam = employees.Where(o => o.TeamId == teamId).ToList();
 
-            // Of selected employees, find all with TeamRoleId == 1 and sort them by MonthsEmployed
-            // Sort other employees by MonthsEmployed
-            bool nightStartsFirst = teams.FirstOrDefault(x => x.Id == teamId).NextMonthStartsWithNight;
+        //    // Of selected employees, find all with TeamRoleId == 1 and sort them by MonthsEmployed
+        //    // Sort other employees by MonthsEmployed
+        //    bool nightStartsFirst = teams.FirstOrDefault(x => x.Id == teamId).NextMonthStartsWithNight;
 
-            foreach (Employee emp in employeesInTeam)
-            {
-                List<Absence> testAbsences = absences.FindAll(x => x.EmployeeId == emp.Id && x.Year == year && x.Month == month);
-                List<int> datesAbsent = new List<int>();
-                bool isAbsentThisMonth = testAbsences.Count() > 0;
+        //    foreach (Employee emp in employeesInTeam)
+        //    {
+        //        List<Absence> testAbsences = absences.FindAll(x => x.EmployeeId == emp.Id && x.Year == year && x.Month == month);
+        //        List<int> datesAbsent = new List<int>();
+        //        bool isAbsentThisMonth = testAbsences.Count() > 0;
 
-                if (isAbsentThisMonth)
-                {
-                    foreach (Absence a in testAbsences)
-                    {
-                        for (int i = a.StartDay; i <= a.EndDay; i++)
-                        {
-                            datesAbsent.Add(i);
-                        }
-                    }
-                }
+        //        if (isAbsentThisMonth)
+        //        {
+        //            foreach (Absence a in testAbsences)
+        //            {
+        //                for (int i = a.StartDay; i <= a.EndDay; i++)
+        //                {
+        //                    datesAbsent.Add(i);
+        //                }
+        //            }
+        //        }
 
-                int dateCount = 1;
+        //        int dateCount = 1;
 
-                while (dateCount <= daysInMonth)
-                {
-                    string shiftName = "";
-                    if (datesAbsent.Contains(dateCount))
-                    {
-                        string absenceType = testAbsences.FirstOrDefault(x => dateCount >= x.StartDay && dateCount <= x.EndDay).Type;
-                        shiftName = absenceType;
-                    }
-                    else if (nightStartsFirst && dateCount == 1)
-                    {
-                        shiftName = "N";
-                    }
-                    else if ((dateCount - start.Day) % 5 == 0)
-                    {
-                        shiftName = "D";
-                    }
-                    else if ((dateCount - start.Day) % 5 == 1)
-                    {
-                        shiftName = "N";
-                    }
-                    else
-                    {
-                        dateCount++;
-                        continue;
-                    }
-                    shifts.Add(new Shift(shiftName, month, new DateTime(year, month, dateCount), emp.Id));
+        //        while (dateCount <= daysInMonth)
+        //        {
+        //            string shiftName = "";
+        //            if (datesAbsent.Contains(dateCount))
+        //            {
+        //                string absenceType = testAbsences.FirstOrDefault(x => dateCount >= x.StartDay && dateCount <= x.EndDay).Type;
+        //                shiftName = absenceType;
+        //            }
+        //            else if (nightStartsFirst && dateCount == 1)
+        //            {
+        //                shiftName = "N";
+        //            }
+        //            else if ((dateCount - start.Day) % 5 == 0)
+        //            {
+        //                shiftName = "D";
+        //            }
+        //            else if ((dateCount - start.Day) % 5 == 1)
+        //            {
+        //                shiftName = "N";
+        //            }
+        //            else
+        //            {
+        //                dateCount++;
+        //                continue;
+        //            }
+        //            shifts.Add(new Shift(shiftName, month, new DateTime(year, month, dateCount), emp.Id));
 
-                    dateCount++;
-                }
-            }
-        }
+        //            dateCount++;
+        //        }
+        //    }
+        //}
 
         //        void GenerateOtherShifts(int teamId, int month, int year, string pattern)
         //        {
