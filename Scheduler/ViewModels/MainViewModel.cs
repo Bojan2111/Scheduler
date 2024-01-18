@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Scheduler.Logic;
 using Scheduler.Models;
+using Scheduler.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,6 +10,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Scheduler.ViewModels
@@ -51,23 +53,28 @@ namespace Scheduler.ViewModels
             {
                 if (SelectedTeam != null)
                 {
-                    var editedTeam = _context.Teams.Find(SelectedTeam.Id);
+                    var editWindow = new EditTeamWindow();
+                    // Set DataContext or pass SelectedTeam to the EditTeamWindow for editing
+                    editWindow.DataContext = SelectedTeam;
+                    editWindow.ShowDialog();
 
-                    if (editedTeam != null)
-                    {
-                        editedTeam.Name = SelectedTeam.Name;
-                        editedTeam.ShiftPattern = SelectedTeam.ShiftPattern;
-                        editedTeam.CurrentMonth = SelectedTeam.CurrentMonth;
-                        editedTeam.CurrentStartDate = SelectedTeam.CurrentStartDate;
-                        editedTeam.NextMonthStartDate = SelectedTeam.NextMonthStartDate;
-                        editedTeam.NextMonthStartsWithNight = SelectedTeam.NextMonthStartsWithNight;
-                    }
-                    else
-                    {
-                        _context.Teams.Add(SelectedTeam);
-                    }
+                    //var editedTeam = _context.Teams.Find(SelectedTeam.Id);
 
-                    _context.SaveChanges();
+                    //if (editedTeam != null)
+                    //{
+                    //    editedTeam.Name = SelectedTeam.Name;
+                    //    editedTeam.ShiftPattern = SelectedTeam.ShiftPattern;
+                    //    editedTeam.CurrentMonth = SelectedTeam.CurrentMonth;
+                    //    editedTeam.CurrentStartDate = SelectedTeam.CurrentStartDate;
+                    //    editedTeam.NextMonthStartDate = SelectedTeam.NextMonthStartDate;
+                    //    editedTeam.NextMonthStartsWithNight = SelectedTeam.NextMonthStartsWithNight;
+                    //}
+                    //else
+                    //{
+                    //    _context.Teams.Add(SelectedTeam);
+                    //}
+
+                    //_context.SaveChanges();
 
                     LoadContext();
                 }
@@ -94,11 +101,20 @@ namespace Scheduler.ViewModels
 
         private void DeleteTeam()
         {
-            if (SelectedTeam != null)
+            var result = MessageBox.Show("This item will be permanently deleted from the database. Are you sure you want to do this?", "Delete Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Yes)
             {
+                // Handle logic for deleting the selected team
+                Teams.Remove(SelectedTeam);
                 _context.Teams.Remove(SelectedTeam);
                 _context.SaveChanges();
             }
+            //if (SelectedTeam != null)
+            //{
+            //    _context.Teams.Remove(SelectedTeam);
+            //    _context.SaveChanges();
+            //}
 
             LoadContext();
         }

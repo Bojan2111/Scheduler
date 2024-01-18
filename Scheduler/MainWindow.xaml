@@ -14,7 +14,7 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </Window.Resources>
     <Grid>
-        <DataGrid ItemsSource="{Binding Teams}" AutoGenerateColumns="False" SelectedItem="{Binding SelectedTeam}">
+        <DataGrid ItemsSource="{Binding Teams}" CanUserAddRows="False" IsReadOnly="True" AutoGenerateColumns="False" SelectedItem="{Binding SelectedTeam}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Team Name" Binding="{Binding Name}" />
                 <DataGridTextColumn Header="Shift Pattern" Binding="{Binding ShiftPattern}" />
@@ -40,14 +40,14 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn>
+                <!--<DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button Content="Add" Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" 
                     CommandParameter="{Binding}" Visibility="{Binding CanUserDeleteRows, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Converter={StaticResource BooleanToVisibilityConverter}}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                </DataGridTemplateColumn>-->
 
             </DataGrid.Columns>
             <DataGrid.ContextMenu>
