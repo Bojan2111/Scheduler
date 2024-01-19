@@ -54,26 +54,19 @@ namespace Scheduler.ViewModels
                 if (SelectedTeam != null)
                 {
                     var editWindow = new EditTeamWindow(SelectedTeam);
-                    // Set DataContext or pass SelectedTeam to the EditTeamWindow for editing
+
                     editWindow.DataContext = SelectedTeam;
                     editWindow.ShowDialog();
 
-                    //var editedTeam = _context.Teams.Find(SelectedTeam.Id);
-                    //if (editedTeam != null)
-                    //{
-                    //    editedTeam.Name = SelectedTeam.Name;
-                    //    editedTeam.ShiftPattern = SelectedTeam.ShiftPattern;
-                    //    editedTeam.CurrentMonth = SelectedTeam.CurrentMonth;
-                    //    editedTeam.CurrentStartDate = SelectedTeam.CurrentStartDate;
-                    //    editedTeam.NextMonthStartDate = SelectedTeam.NextMonthStartDate;
-                    //    editedTeam.NextMonthStartsWithNight = SelectedTeam.NextMonthStartsWithNight;
-                    //}
-                    //else
-                    //{
-                    //    _context.Teams.Add(SelectedTeam);
-                    //}
+                    var editedTeam = _context.Teams.Find(SelectedTeam.Id);
+                    editedTeam.Name = SelectedTeam.Name;
+                    editedTeam.ShiftPattern = SelectedTeam.ShiftPattern;
+                    editedTeam.CurrentMonth = SelectedTeam.CurrentMonth;
+                    editedTeam.CurrentStartDate = SelectedTeam.CurrentStartDate;
+                    editedTeam.NextMonthStartDate = SelectedTeam.NextMonthStartDate;
+                    editedTeam.NextMonthStartsWithNight = SelectedTeam.NextMonthStartsWithNight;
 
-                    //_context.SaveChanges();
+                    _context.SaveChanges();
 
                     LoadContext();
                 }

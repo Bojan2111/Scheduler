@@ -1,10 +1,13 @@
-﻿using Scheduler.Models;
+﻿using Scheduler.Logic;
+using Scheduler.Models;
+using Scheduler.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Scheduler.ViewModels
 {
@@ -19,18 +22,20 @@ namespace Scheduler.ViewModels
             {
                 _team = value;
                 OnPropertyChanged(nameof(Team));
+                OnPropertyChanged(nameof(ShiftPatterns));
             }
         }
 
-        // Other properties for editable team details...
-
-        // Constructor
         public EditTeamViewModel(Team team)
         {
-            if (team == null) throw new ArgumentNullException(nameof(team));
             Team = team;
-            // Initialize other properties as needed
         }
+
+        public List<ShiftPatternItem> ShiftPatterns { get; } = new List<ShiftPatternItem>
+    {
+        new ShiftPatternItem { Value = "DN3", DisplayText = "Day-Night-3 days free" },
+        new ShiftPatternItem { Value = "8", DisplayText = "Morning shift" }
+    };
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -38,5 +43,11 @@ namespace Scheduler.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+    }
+
+    public class ShiftPatternItem
+    {
+        public string Value { get; set; }
+        public string DisplayText { get; set; }
     }
 }

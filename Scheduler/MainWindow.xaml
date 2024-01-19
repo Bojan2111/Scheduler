@@ -14,7 +14,30 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </Window.Resources>
     <Grid>
-        <DataGrid ItemsSource="{Binding Teams}" CanUserAddRows="False" IsReadOnly="True" AutoGenerateColumns="False" SelectedItem="{Binding SelectedTeam}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <RadioButton Grid.Column="0" Content="Timetable"/>
+            <RadioButton Grid.Column="1" Content="Teams"/>
+            <RadioButton Grid.Column="2" Content="Employees"/>
+            <RadioButton Grid.Column="3" Content="Team Roles"/>
+            <RadioButton Grid.Column="4" Content="National Holidays"/>
+            <RadioButton Grid.Column="5" Content="Next Month Schedule"/>
+        </Grid>
+        
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Teams}" CanUserAddRows="False" IsReadOnly="True" AutoGenerateColumns="False" SelectedItem="{Binding SelectedTeam}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Team Name" Binding="{Binding Name}" />
                 <DataGridTextColumn Header="Shift Pattern" Binding="{Binding ShiftPattern}" />

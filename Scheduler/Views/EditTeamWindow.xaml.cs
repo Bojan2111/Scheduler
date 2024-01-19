@@ -36,5 +36,10 @@ namespace Scheduler.Views
         {
             this.Close();
         }
+
+        private void UpdateTeamClick(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

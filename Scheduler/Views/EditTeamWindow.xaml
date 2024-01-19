@@ -42,15 +42,21 @@
             <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Name}" />
             <TextBlock Grid.Column="0" Grid.Row="1" Text="Shift pattern"/>
             <!--<ComboBox Grid.Column="1" Grid.Row="1" Selected="{Binding ShiftPattern}" />-->
-            <ComboBox Name="comboBox1"
+            <!--<ComboBox Name="comboBox1"
                       Grid.Column="1"
                       Grid.Row="1"
                       Text="{Binding ShiftPattern}"
                       IsEditable="true"
                       IsReadOnly="true">
-                <ComboBoxItem Content="Dan-Noc-3 dana" Tag="DN3"/>
-                <ComboBoxItem Content="Prepodnevna" Tag="8"/>
-            </ComboBox>
+                <ComboBoxItem Content="DN3" Tag="DN3"/>
+                <ComboBoxItem Content="8" Tag="8"/>
+            </ComboBox>-->
+            <ComboBox Grid.Column="1"
+                      Grid.Row="1"
+                      ItemsSource="{Binding ShiftPatterns}" 
+                      DisplayMemberPath="DisplayText" 
+                      SelectedValuePath="Value" 
+                      SelectedValue="{Binding Team.ShiftPattern}" />
             <TextBlock Grid.Column="0" Grid.Row="2" Text="Current month"/>
             <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding CurrentMonth}" />
             <TextBlock Grid.Column="0" Grid.Row="3" Text="Current month start date"/>
@@ -69,7 +75,8 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Content="Save"
-                    Padding="20 5"/>
+                    Padding="20 5"
+                    Click="UpdateTeamClick"/>
 
             <Button Grid.Column="1"
                     HorizontalAlignment="Center"
