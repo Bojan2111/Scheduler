@@ -4,11 +4,79 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Scheduler.Views"
+        xmlns:vms="clr-namespace:Scheduler.ViewModels"
         mc:Ignorable="d"
         Title="Edit Team" Height="300" Width="400">
+    <Window.Resources>
+        <ObjectDataProvider x:Key="EditTeamViewModelProvider" ObjectType="{x:Type vms:EditTeamViewModel}" />
+    </Window.Resources>
+    <Window.DataContext>
+        <Binding Source="{StaticResource EditTeamViewModelProvider}" />
+    </Window.DataContext>
     <Grid>
-        <DataGrid>
-            
-        </DataGrid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0"
+                   Text="Add or Edit Teams"
+                   HorizontalAlignment="Center"
+                   FontWeight="Bold"
+                   FontSize="20"/>
+        <Grid Grid.Row="1" Margin="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="20"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Column="0" Grid.Row="0" Text="Name"/>
+            <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Name}" />
+            <TextBlock Grid.Column="0" Grid.Row="1" Text="Shift pattern"/>
+            <!--<ComboBox Grid.Column="1" Grid.Row="1" Selected="{Binding ShiftPattern}" />-->
+            <ComboBox Name="comboBox1"
+                      Grid.Column="1"
+                      Grid.Row="1"
+                      Text="{Binding ShiftPattern}"
+                      IsEditable="true"
+                      IsReadOnly="true">
+                <ComboBoxItem Content="Dan-Noc-3 dana" Tag="DN3"/>
+                <ComboBoxItem Content="Prepodnevna" Tag="8"/>
+            </ComboBox>
+            <TextBlock Grid.Column="0" Grid.Row="2" Text="Current month"/>
+            <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding CurrentMonth}" />
+            <TextBlock Grid.Column="0" Grid.Row="3" Text="Current month start date"/>
+            <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding CurrentStartDate}" />
+            <TextBlock Grid.Column="0" Grid.Row="4" Text="Next month start date"/>
+            <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding NextMonthStartDate}" />
+            <TextBlock Grid.Column="0" Grid.Row="5" Text="Next month starts with N"/>
+            <CheckBox Grid.Column="1" Grid.Row="5" IsChecked="{Binding NextMonthStartsWithNight}" />
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Content="Save"
+                    Padding="20 5"/>
+
+            <Button Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Content="Cancel"
+                    Padding="5"
+                    Click="CancelBtnClick"/>
+        </Grid>
     </Grid>
 </Window>

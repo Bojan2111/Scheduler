@@ -53,13 +53,12 @@ namespace Scheduler.ViewModels
             {
                 if (SelectedTeam != null)
                 {
-                    var editWindow = new EditTeamWindow();
+                    var editWindow = new EditTeamWindow(SelectedTeam);
                     // Set DataContext or pass SelectedTeam to the EditTeamWindow for editing
                     editWindow.DataContext = SelectedTeam;
                     editWindow.ShowDialog();
 
                     //var editedTeam = _context.Teams.Find(SelectedTeam.Id);
-
                     //if (editedTeam != null)
                     //{
                     //    editedTeam.Name = SelectedTeam.Name;

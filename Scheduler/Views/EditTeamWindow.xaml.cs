@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Scheduler.Models;
+using Scheduler.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +21,20 @@ namespace Scheduler.Views
     /// </summary>
     public partial class EditTeamWindow : Window
     {
-        public EditTeamWindow()
+        public EditTeamWindow(Team team)
         {
+            if (team == null)
+            {
+                throw new ArgumentNullException(nameof(team));
+            }
             InitializeComponent();
+            DataContext = new EditTeamViewModel(team);
+            
+        }
+
+        private void CancelBtnClick(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }
