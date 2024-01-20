@@ -1,4 +1,7 @@
-﻿using Scheduler.ViewModels;
+﻿using Scheduler.Models;
+using Scheduler.Models.DTOs;
+using Scheduler.ViewModels;
+using Scheduler.Views;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,6 +23,19 @@ namespace Scheduler
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void EditButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainViewModel mainViewModel = DataContext as MainViewModel;
+
+            if (mainViewModel != null)
+            {
+                EditTeamDTO selectedTeam = mainViewModel.GetTeamToEdit();
+
+                EditTeamWindow editTeamWindow = new EditTeamWindow(selectedTeam);
+                editTeamWindow.ShowDialog();
+            }
         }
     }
 }

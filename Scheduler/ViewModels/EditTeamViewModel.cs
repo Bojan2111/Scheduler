@@ -1,5 +1,6 @@
 ﻿using Scheduler.Logic;
 using Scheduler.Models;
+using Scheduler.Models.DTOs;
 using Scheduler.Views;
 using System;
 using System.Collections.Generic;
@@ -13,29 +14,43 @@ namespace Scheduler.ViewModels
 {
     public class EditTeamViewModel : INotifyPropertyChanged
     {
-        private Team _team;
+        private SchedulerDbContext _context;
 
-        public Team Team
+        private EditTeamDTO _teamToEdit;
+
+        public EditTeamDTO TeamToEdit
         {
-            get { return _team; }
+            get { return _teamToEdit; }
             set
             {
-                _team = value;
-                OnPropertyChanged(nameof(Team));
-                OnPropertyChanged(nameof(ShiftPatterns));
+                _teamToEdit = value;
+                OnPropertyChanged(nameof(TeamToEdit));
             }
         }
 
-        public EditTeamViewModel(Team team)
+        public EditTeamViewModel()
         {
-            Team = team;
+            TeamToEdit = new EditTeamDTO();
         }
 
-        public List<ShiftPatternItem> ShiftPatterns { get; } = new List<ShiftPatternItem>
-    {
-        new ShiftPatternItem { Value = "DN3", DisplayText = "Day-Night-3 days free" },
-        new ShiftPatternItem { Value = "8", DisplayText = "Morning shift" }
-    };
+        public void SetTeam(EditTeamDTO teamToEdit)
+        {
+            TeamToEdit = teamToEdit;
+        }
+
+        public void UpdateTeam(Team team)
+        {
+            _context = new SchedulerDbContext();
+            var teamToUpdate = _context.Teams.FirstOrDefault(x => x.Id == team.Id);
+            teamToUpdate.Name = team.Name;
+            teamToUpdate.ShiftPattern = team.ShiftPattern;
+            teamToUpdate.CurrentMonth = team.CurrentMonth;
+            teamToUpdate.CurrentStartDate = team.CurrentStartDate;
+            teamToUpdate.NextMonthStartDate = team.NextMonthStartDate;
+            teamToUpdate.NextMonthStartsWithNight = team.NextMonthStartsWithNight;
+
+            _context.SaveChanges();
+        }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -43,11 +58,5 @@ namespace Scheduler.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-    }
-
-    public class ShiftPatternItem
-    {
-        public string Value { get; set; }
-        public string DisplayText { get; set; }
     }
 }

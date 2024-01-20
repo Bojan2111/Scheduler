@@ -1,4 +1,5 @@
 ﻿using Scheduler.Models;
+using Scheduler.Models.DTOs;
 using Scheduler.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -21,15 +22,21 @@ namespace Scheduler.Views
     /// </summary>
     public partial class EditTeamWindow : Window
     {
-        public EditTeamWindow(Team team)
+        private EditTeamViewModel _viewModel;
+
+        public EditTeamWindow(EditTeamDTO teamToEdit)
         {
-            if (team == null)
+            if (teamToEdit == null)
             {
-                throw new ArgumentNullException(nameof(team));
+                throw new ArgumentNullException(nameof(teamToEdit));
             }
+
             InitializeComponent();
-            DataContext = new EditTeamViewModel(team);
-            
+
+            _viewModel = new EditTeamViewModel();
+            _viewModel.SetTeam(teamToEdit);
+
+            DataContext = _viewModel;
         }
 
         private void CancelBtnClick(object sender, RoutedEventArgs e)
@@ -39,6 +46,18 @@ namespace Scheduler.Views
 
         private void UpdateTeamClick(object sender, RoutedEventArgs e)
         {
+            var editedTeamDTO = (EditTeamDTO) this.DataContext;
+            var editedTeam = editedTeamDTO.Team;
+
+
+            if (editedTeam != null)
+            {
+                _viewModel.UpdateTeam(editedTeam);
+            }
+            else
+            {
+                throw new ArgumentNullException("Team", "Data for Team Object expected");
+            }
             this.Close();
         }
     }

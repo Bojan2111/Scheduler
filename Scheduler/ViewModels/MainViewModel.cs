@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Scheduler.Logic;
 using Scheduler.Models;
+using Scheduler.Models.DTOs;
 using Scheduler.Views;
 using System;
 using System.Collections.Generic;
@@ -53,20 +54,12 @@ namespace Scheduler.ViewModels
             {
                 if (SelectedTeam != null)
                 {
-                    var editWindow = new EditTeamWindow(SelectedTeam);
+                    EditTeamDTO teamToEdit = new EditTeamDTO();
+                    teamToEdit.Team = SelectedTeam;
+                    var editWindow = new EditTeamWindow(teamToEdit);
 
-                    editWindow.DataContext = SelectedTeam;
+                    editWindow.DataContext = teamToEdit;
                     editWindow.ShowDialog();
-
-                    var editedTeam = _context.Teams.Find(SelectedTeam.Id);
-                    editedTeam.Name = SelectedTeam.Name;
-                    editedTeam.ShiftPattern = SelectedTeam.ShiftPattern;
-                    editedTeam.CurrentMonth = SelectedTeam.CurrentMonth;
-                    editedTeam.CurrentStartDate = SelectedTeam.CurrentStartDate;
-                    editedTeam.NextMonthStartDate = SelectedTeam.NextMonthStartDate;
-                    editedTeam.NextMonthStartsWithNight = SelectedTeam.NextMonthStartsWithNight;
-
-                    _context.SaveChanges();
 
                     LoadContext();
                 }
@@ -76,6 +69,12 @@ namespace Scheduler.ViewModels
 
                 throw;
             }
+        }
+        public EditTeamDTO GetTeamToEdit()
+        {
+            EditTeamDTO editTeam = new EditTeamDTO();
+            editTeam.Team = SelectedTeam;
+            return editTeam;
         }
         public MainViewModel()
         {
