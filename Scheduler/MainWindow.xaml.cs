@@ -37,5 +37,13 @@ namespace Scheduler
                 editTeamWindow.ShowDialog();
             }
         }
+
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainViewModel mainViewModel = DataContext as MainViewModel;
+            EditTeamDTO emptyTeam = mainViewModel.GetEmptyTeam();
+            EditTeamWindow editTeamWindow = new EditTeamWindow(emptyTeam);
+            editTeamWindow.ShowDialog();
+        }
     }
 }

@@ -46,8 +46,8 @@ namespace Scheduler.Views
 
         private void UpdateTeamClick(object sender, RoutedEventArgs e)
         {
-            var editedTeamDTO = (EditTeamDTO) this.DataContext;
-            var editedTeam = editedTeamDTO.Team;
+            EditTeamViewModel editedTeamVM = (EditTeamViewModel) this.DataContext;
+            var editedTeam = editedTeamVM.TeamToEdit.Team;
 
 
             if (editedTeam != null)

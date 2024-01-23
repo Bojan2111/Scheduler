@@ -44,44 +44,59 @@ namespace Scheduler.ViewModels
             }
         }
 
-        public ICommand EditCommand { get; }
+        //public ICommand EditCommand { get; }
         public ICommand DeleteCommand { get; }
 
 
-        private void EditTeam()
-        {
-            try
-            {
-                if (SelectedTeam != null)
-                {
-                    EditTeamDTO teamToEdit = new EditTeamDTO();
-                    teamToEdit.Team = SelectedTeam;
-                    var editWindow = new EditTeamWindow(teamToEdit);
+        //private void EditTeam()
+        //{
+        //    try
+        //    {
+        //        if (SelectedTeam != null)
+        //        {
+        //            EditTeamDTO teamToEdit = new EditTeamDTO();
+        //            teamToEdit.Team = SelectedTeam;
+        //            var editWindow = new EditTeamWindow(teamToEdit);
 
-                    editWindow.DataContext = teamToEdit;
-                    editWindow.ShowDialog();
+        //            editWindow.DataContext = teamToEdit;
+        //            editWindow.ShowDialog();
 
-                    LoadContext();
-                }
-            }
-            catch (Exception)
-            {
+        //            LoadContext();
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
 
-                throw;
-            }
-        }
+        //        throw;
+        //    }
+        //}
         public EditTeamDTO GetTeamToEdit()
         {
             EditTeamDTO editTeam = new EditTeamDTO();
             editTeam.Team = SelectedTeam;
             return editTeam;
         }
+
+        public EditTeamDTO GetEmptyTeam()
+        {
+            EditTeamDTO emptyTeam = new EditTeamDTO();
+            emptyTeam.Team = new Team()
+            {
+                Name = string.Empty,
+                ShiftPattern = "DN3",
+                CurrentMonth = DateTime.Now.Month,
+                CurrentStartDate = DateTime.Now.Date,
+                NextMonthStartDate = DateTime.Now.Date.AddMonths(1),
+            };
+
+            return emptyTeam;
+        }
         public MainViewModel()
         {
             _context = new SchedulerDbContext();
             LoadContext();
             
-            EditCommand = new RelayCommand(EditTeam);
+            //EditCommand = new RelayCommand(EditTeam);
             DeleteCommand = new RelayCommand(DeleteTeam);
         }
 
@@ -97,7 +112,6 @@ namespace Scheduler.ViewModels
             if (result == MessageBoxResult.Yes)
             {
                 // Handle logic for deleting the selected team
-                Teams.Remove(SelectedTeam);
                 _context.Teams.Remove(SelectedTeam);
                 _context.SaveChanges();
             }

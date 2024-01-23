@@ -18,6 +18,8 @@ namespace Scheduler.ViewModels
 
         private EditTeamDTO _teamToEdit;
 
+        public event EventHandler TeamUpdated;
+
         public EditTeamDTO TeamToEdit
         {
             get { return _teamToEdit; }
@@ -42,14 +44,27 @@ namespace Scheduler.ViewModels
         {
             _context = new SchedulerDbContext();
             var teamToUpdate = _context.Teams.FirstOrDefault(x => x.Id == team.Id);
-            teamToUpdate.Name = team.Name;
-            teamToUpdate.ShiftPattern = team.ShiftPattern;
-            teamToUpdate.CurrentMonth = team.CurrentMonth;
-            teamToUpdate.CurrentStartDate = team.CurrentStartDate;
-            teamToUpdate.NextMonthStartDate = team.NextMonthStartDate;
-            teamToUpdate.NextMonthStartsWithNight = team.NextMonthStartsWithNight;
+
+            if (teamToUpdate != null) // If the team exists in the database, it will be updated. Otherwise, a new entry will be created.
+            {
+                teamToUpdate.Name = team.Name;
+                teamToUpdate.ShiftPattern = team.ShiftPattern;
+                teamToUpdate.CurrentMonth = team.CurrentMonth;
+                teamToUpdate.CurrentStartDate = team.CurrentStartDate;
+                teamToUpdate.NextMonthStartDate = team.NextMonthStartDate;
+                teamToUpdate.NextMonthStartsWithNight = team.NextMonthStartsWithNight;
+            } else
+            {
+                _context.Teams.Add(team);
+            }
 
             _context.SaveChanges();
+            OnTeamUpdated();
+        }
+
+        private void OnTeamUpdated()
+        {
+            TeamUpdated?.Invoke(this, EventArgs.Empty);
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

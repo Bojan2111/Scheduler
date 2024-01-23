@@ -48,8 +48,9 @@
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Content="Edit" Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" 
-                    CommandParameter="{Binding}" />
+                            <Button Content="Edit" Click="EditButton_Click" />
+                            <!--<Button Content="Edit" Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" 
+                    CommandParameter="{Binding}" />-->
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -73,12 +74,17 @@
                 </DataGridTemplateColumn>-->
 
             </DataGrid.Columns>
-            <DataGrid.ContextMenu>
+            <!--<DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Edit" Command="{Binding EditCommand}" />
                     <MenuItem Header="Delete" Command="{Binding DeleteCommand}" />
                 </ContextMenu>
-            </DataGrid.ContextMenu>
+            </DataGrid.ContextMenu>-->
         </DataGrid>
+        <Button Grid.Row="2"
+                Content="Add New Team"
+                Height="20"
+                Width="100"
+                Click="AddButton_Click"/>
     </Grid>
 </Window>

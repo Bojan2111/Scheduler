@@ -11,8 +11,8 @@
         <ObjectDataProvider x:Key="EditTeamViewModelProvider" ObjectType="{x:Type vms:EditTeamViewModel}" />
     </Window.Resources>
     <Window.DataContext>
-        <Binding Source="{StaticResource EditTeamViewModelProvider}" />
-        <!--<vms:EditTeamViewModel />-->
+        <!--<Binding Source="{StaticResource EditTeamViewModelProvider}" />-->
+        <vms:EditTeamViewModel />
     </Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>
@@ -40,23 +40,23 @@
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Column="0" Grid.Row="0" Text="Name"/>
-            <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Team.Name}" />
+            <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding TeamToEdit.Team.Name}" />
             <TextBlock Grid.Column="0" Grid.Row="1" Text="Shift pattern"/>
             
             <ComboBox Grid.Column="1"
                       Grid.Row="1"
-                      ItemsSource="{Binding ShiftPatterns}" 
+                      ItemsSource="{Binding TeamToEdit.ShiftPatterns}" 
                       DisplayMemberPath="DisplayText" 
                       SelectedValuePath="Value" 
-                      SelectedValue="{Binding Team.ShiftPattern}" />
+                      SelectedValue="{Binding TeamToEdit.Team.ShiftPattern}" />
             <TextBlock Grid.Column="0" Grid.Row="2" Text="Current month"/>
-            <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Team.CurrentMonth}" />
+            <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding TeamToEdit.Team.CurrentMonth}" />
             <TextBlock Grid.Column="0" Grid.Row="3" Text="Current month start date"/>
-            <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Team.CurrentStartDate}" />
+            <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding TeamToEdit.Team.CurrentStartDate}" />
             <TextBlock Grid.Column="0" Grid.Row="4" Text="Next month start date"/>
-            <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding Team.NextMonthStartDate}" />
+            <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding TeamToEdit.Team.NextMonthStartDate}" />
             <TextBlock Grid.Column="0" Grid.Row="5" Text="Next month starts with N"/>
-            <CheckBox Grid.Column="1" Grid.Row="5" IsChecked="{Binding Team.NextMonthStartsWithNight}" />
+            <CheckBox Grid.Column="1" Grid.Row="5" IsChecked="{Binding TeamToEdit.Team.NextMonthStartsWithNight}" />
         </Grid>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
