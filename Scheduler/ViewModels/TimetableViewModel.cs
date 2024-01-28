@@ -1,4 +1,4 @@
-﻿using Scheduler.State.Navigators;
+﻿using Scheduler.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace Scheduler.ViewModels
 {
-    public class MainViewModel : ViewModelBase
+    public class TimetableViewModel : ViewModelBase
     {
-        public INavigator Navigator { get; set; } = new Navigator();
     }
 }

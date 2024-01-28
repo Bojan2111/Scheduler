@@ -27,7 +27,7 @@ namespace Scheduler
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
-            MainViewModel mainViewModel = DataContext as MainViewModel;
+            TeamsViewModel mainViewModel = DataContext as TeamsViewModel;
 
             if (mainViewModel != null)
             {
@@ -40,7 +40,7 @@ namespace Scheduler
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-            MainViewModel mainViewModel = DataContext as MainViewModel;
+            TeamsViewModel mainViewModel = DataContext as TeamsViewModel;
             EditTeamDTO emptyTeam = mainViewModel.GetEmptyTeam();
             EditTeamWindow editTeamWindow = new EditTeamWindow(emptyTeam);
             editTeamWindow.ShowDialog();

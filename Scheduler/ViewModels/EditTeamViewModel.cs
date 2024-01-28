@@ -12,7 +12,7 @@ using System.Windows.Input;
 
 namespace Scheduler.ViewModels
 {
-    public class EditTeamViewModel : INotifyPropertyChanged
+    public class EditTeamViewModel : ViewModelBase
     {
         private SchedulerDbContext _context;
 
@@ -67,11 +67,11 @@ namespace Scheduler.ViewModels
             TeamUpdated?.Invoke(this, EventArgs.Empty);
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        //public event PropertyChangedEventHandler? PropertyChanged;
 
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        //protected virtual void OnPropertyChanged(string propertyName)
+        //{
+        //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        //}
     }
 }
