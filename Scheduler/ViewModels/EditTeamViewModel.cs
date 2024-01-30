@@ -45,7 +45,7 @@ namespace Scheduler.ViewModels
             _context = new SchedulerDbContext();
             var teamToUpdate = _context.Teams.FirstOrDefault(x => x.Id == team.Id);
 
-            if (teamToUpdate != null) // If the team exists in the database, it will be updated. Otherwise, a new entry will be created.
+            if (teamToUpdate != null)
             {
                 teamToUpdate.Name = team.Name;
                 teamToUpdate.ShiftPattern = team.ShiftPattern;
@@ -66,12 +66,5 @@ namespace Scheduler.ViewModels
         {
             TeamUpdated?.Invoke(this, EventArgs.Empty);
         }
-
-        //public event PropertyChangedEventHandler? PropertyChanged;
-
-        //protected virtual void OnPropertyChanged(string propertyName)
-        //{
-        //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        //}
     }
 }

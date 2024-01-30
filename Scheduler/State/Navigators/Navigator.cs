@@ -1,4 +1,5 @@
 ﻿using Scheduler.Commands;
+using Scheduler.Models;
 using Scheduler.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -9,9 +10,21 @@ using System.Windows.Input;
 
 namespace Scheduler.State.Navigators
 {
-    public class Navigator : INavigator
+    public class Navigator : ObservableObject, INavigator
     {
-        public ViewModelBase CurrentView { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        private ViewModelBase _viewModel;
+        public ViewModelBase CurrentView
+        {
+            get
+            {
+                return _viewModel;
+            }
+            set
+            {
+                _viewModel = value;
+                OnPropertyChanged(nameof(CurrentView));
+            }
+        }
 
         public ICommand UpdateCurrentViewModelCommand => new UpdateCurrentViewCommand(this);
     }
