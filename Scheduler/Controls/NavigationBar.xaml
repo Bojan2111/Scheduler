@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Scheduler.Controls"
-             xmlns:nav="clr-namespace:Scheduler.State.Navigators"
+             xmlns:nav="clr-namespace:Scheduler.State.Navigators" d:DataContext="{d:DesignInstance Type=nav:Navigator}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -27,11 +27,11 @@
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <RadioButton Grid.Column="0" Content="Timetable" Command="{Binding UpdateCurrentViewCommand}" CommandParameter="{x:Static nav:ViewType.Schedule}"/>
-            <RadioButton Grid.Column="1" Content="Teams" CommandParameter="{x:Static nav:ViewType.Teams}"/>
-            <RadioButton Grid.Column="2" Content="Employees" CommandParameter="{x:Static nav:ViewType.Employees}"/>
-            <RadioButton Grid.Column="4" Content="National Holidays" CommandParameter="{x:Static nav:ViewType.NationalHolidays}"/>
-            <RadioButton Grid.Column="5" Content="Next Month Schedule" CommandParameter="{x:Static nav:ViewType.NewSchedule}"/>
+            <RadioButton Grid.Column="0" Content="Timetable" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Schedule}"/>
+            <RadioButton Grid.Column="1" Content="Teams" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Teams}"/>
+            <RadioButton Grid.Column="2" Content="Employees" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.Employees}"/>
+            <RadioButton Grid.Column="4" Content="National Holidays" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.NationalHolidays}"/>
+            <RadioButton Grid.Column="5" Content="Next Month Schedule" Command="{Binding UpdateCurrentViewModelCommand}" CommandParameter="{x:Static nav:ViewType.NewSchedule}"/>
         </Grid>
     </Grid>
 </UserControl>

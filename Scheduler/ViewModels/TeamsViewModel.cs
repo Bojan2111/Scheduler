@@ -19,7 +19,6 @@ namespace Scheduler.ViewModels
 {
     public class TeamsViewModel : ViewModelBase
     {
-        public INavigator Navigator { get; set; } = new Navigator();
         private SchedulerDbContext _context;
 
         private ObservableCollection<Team> _teams;

@@ -1,13 +1,32 @@
 ﻿<Application x:Class="Scheduler.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Scheduler">
+             xmlns:local="clr-namespace:Scheduler"
+             xmlns:views="clr-namespace:Scheduler.Views"
+             xmlns:viewmodels="clr-namespace:Scheduler.ViewModels">
     <!--StartupUri="MainWindow.xaml"-->
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/Common.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <DataTemplate DataType="{x:Type viewmodels:TeamsViewModel}">
+                <views:TeamsView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:EmployeesViewModel}">
+                <views:EmployeesView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:TimetableViewModel}">
+                <views:TimetableView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:NewScheduleViewModel}">
+                <views:NewScheduleView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:NationalHolidays}">
+                <views:NationalHolidaysView/>
+            </DataTemplate>
+            
         </ResourceDictionary>
     </Application.Resources>
 </Application>

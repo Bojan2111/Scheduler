@@ -24,26 +24,5 @@ namespace Scheduler
         {
             InitializeComponent();
         }
-
-        private void EditButton_Click(object sender, RoutedEventArgs e)
-        {
-            TeamsViewModel mainViewModel = DataContext as TeamsViewModel;
-
-            if (mainViewModel != null)
-            {
-                EditTeamDTO selectedTeam = mainViewModel.GetTeamToEdit();
-
-                EditTeamWindow editTeamWindow = new EditTeamWindow(selectedTeam);
-                editTeamWindow.ShowDialog();
-            }
-        }
-
-        private void AddButton_Click(object sender, RoutedEventArgs e)
-        {
-            TeamsViewModel mainViewModel = DataContext as TeamsViewModel;
-            EditTeamDTO emptyTeam = mainViewModel.GetEmptyTeam();
-            EditTeamWindow editTeamWindow = new EditTeamWindow(emptyTeam);
-            editTeamWindow.ShowDialog();
-        }
     }
 }
