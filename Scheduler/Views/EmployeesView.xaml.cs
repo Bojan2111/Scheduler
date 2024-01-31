@@ -24,5 +24,15 @@ namespace Scheduler.Views
         {
             InitializeComponent();
         }
+
+        private void EditButton_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void AddButton_Click(Object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

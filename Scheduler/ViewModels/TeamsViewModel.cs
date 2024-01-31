@@ -44,33 +44,7 @@ namespace Scheduler.ViewModels
                 OnPropertyChanged(nameof(SelectedTeam));
             }
         }
-
-        //public ICommand EditCommand { get; }
         public ICommand DeleteCommand { get; }
-
-
-        //private void EditTeam()
-        //{
-        //    try
-        //    {
-        //        if (SelectedTeam != null)
-        //        {
-        //            EditTeamDTO teamToEdit = new EditTeamDTO();
-        //            teamToEdit.Team = SelectedTeam;
-        //            var editWindow = new EditTeamWindow(teamToEdit);
-
-        //            editWindow.DataContext = teamToEdit;
-        //            editWindow.ShowDialog();
-
-        //            LoadContext();
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-
-        //        throw;
-        //    }
-        //}
         public EditTeamDTO GetTeamToEdit()
         {
             EditTeamDTO editTeam = new EditTeamDTO();
@@ -97,7 +71,6 @@ namespace Scheduler.ViewModels
             _context = new SchedulerDbContext();
             LoadContext();
             
-            //EditCommand = new RelayCommand(EditTeam);
             DeleteCommand = new RelayCommand(DeleteTeam);
         }
 
@@ -112,24 +85,11 @@ namespace Scheduler.ViewModels
 
             if (result == MessageBoxResult.Yes)
             {
-                // Handle logic for deleting the selected team
                 _context.Teams.Remove(SelectedTeam);
                 _context.SaveChanges();
             }
-            //if (SelectedTeam != null)
-            //{
-            //    _context.Teams.Remove(SelectedTeam);
-            //    _context.SaveChanges();
-            //}
 
             LoadContext();
         }
-
-        //public event PropertyChangedEventHandler? PropertyChanged;
-
-        //protected virtual void OnPropertyChanged(string propertyName)
-        //{
-        //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        //}
     }
 }
