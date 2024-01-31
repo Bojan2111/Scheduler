@@ -28,11 +28,11 @@ namespace Scheduler.Views
         }
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
-            TeamsViewModel mainViewModel = DataContext as TeamsViewModel;
+            TeamsViewModel teamViewModel = DataContext as TeamsViewModel;
 
-            if (mainViewModel != null)
+            if (teamViewModel != null)
             {
-                EditTeamDTO selectedTeam = mainViewModel.GetTeamToEdit();
+                EditTeamDTO selectedTeam = teamViewModel.GetTeamToEdit();
 
                 EditTeamWindow editTeamWindow = new EditTeamWindow(selectedTeam);
                 editTeamWindow.ShowDialog();

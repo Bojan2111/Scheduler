@@ -16,31 +16,31 @@ namespace Scheduler.ViewModels
     {
         private SchedulerDbContext _context;
 
-        private EditTeamDTO _teamToEdit;
+        private EditTeamDTO _itemToEdit;
 
-        public event EventHandler TeamUpdated;
+        public event EventHandler ItemUpdated;
 
-        public EditTeamDTO TeamToEdit
+        public EditTeamDTO ItemToEdit
         {
-            get { return _teamToEdit; }
+            get { return _itemToEdit; }
             set
             {
-                _teamToEdit = value;
-                OnPropertyChanged(nameof(TeamToEdit));
+                _itemToEdit = value;
+                OnPropertyChanged(nameof(ItemToEdit));
             }
         }
 
         public EditTeamViewModel()
         {
-            TeamToEdit = new EditTeamDTO();
+            ItemToEdit = new EditTeamDTO();
         }
 
-        public void SetTeam(EditTeamDTO teamToEdit)
+        public void SetItem(EditTeamDTO teamToEdit)
         {
-            TeamToEdit = teamToEdit;
+            ItemToEdit = teamToEdit;
         }
 
-        public void UpdateTeam(Team team)
+        public void UpdateItem(Team team)
         {
             _context = new SchedulerDbContext();
             var teamToUpdate = _context.Teams.FirstOrDefault(x => x.Id == team.Id);
@@ -59,12 +59,12 @@ namespace Scheduler.ViewModels
             }
 
             _context.SaveChanges();
-            OnTeamUpdated();
+            OnItemUpdated();
         }
 
-        private void OnTeamUpdated()
+        private void OnItemUpdated()
         {
-            TeamUpdated?.Invoke(this, EventArgs.Empty);
+            ItemUpdated?.Invoke(this, EventArgs.Empty);
         }
     }
 }
