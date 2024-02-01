@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Scheduler.Models.DTOs;
+using Scheduler.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,12 +29,40 @@ namespace Scheduler.Views
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            EmployeesViewModel viewModel = new EmployeesViewModel();
+
+            if (viewModel != null )
+            {
+                EditEmployeeDTO selectedItem = viewModel.GetEmployeeToEdit();
+
+                EditEmployeeWindow editEmployeeWindow = new EditEmployeeWindow(selectedItem);
+                editEmployeeWindow.ShowDialog();
+            }
         }
 
         private void AddButton_Click(Object sender, RoutedEventArgs e)
         {
             throw new NotImplementedException();
         }
+        //private void EditButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    TeamsViewModel teamViewModel = DataContext as TeamsViewModel;
+
+        //    if (teamViewModel != null)
+        //    {
+        //        EditTeamDTO selectedTeam = teamViewModel.GetTeamToEdit();
+
+        //        EditTeamWindow editTeamWindow = new EditTeamWindow(selectedTeam);
+        //        editTeamWindow.ShowDialog();
+        //    }
+        //}
+
+        //private void AddButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    TeamsViewModel mainViewModel = DataContext as TeamsViewModel;
+        //    EditTeamDTO emptyTeam = mainViewModel.GetEmptyTeam();
+        //    EditTeamWindow editTeamWindow = new EditTeamWindow(emptyTeam);
+        //    editTeamWindow.ShowDialog();
+        //}
     }
 }

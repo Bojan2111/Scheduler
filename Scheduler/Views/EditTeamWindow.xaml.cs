@@ -34,7 +34,7 @@ namespace Scheduler.Views
             InitializeComponent();
 
             _viewModel = new EditTeamViewModel();
-            _viewModel.SetTeam(teamToEdit);
+            _viewModel.SetItem(teamToEdit);
 
             DataContext = _viewModel;
         }
@@ -47,12 +47,12 @@ namespace Scheduler.Views
         private void UpdateTeamClick(object sender, RoutedEventArgs e)
         {
             EditTeamViewModel editedTeamVM = (EditTeamViewModel) this.DataContext;
-            var editedTeam = editedTeamVM.TeamToEdit.Team;
+            var editedTeam = editedTeamVM.ItemToEdit.Team;
 
 
             if (editedTeam != null)
             {
-                _viewModel.UpdateTeam(editedTeam);
+                _viewModel.UpdateItem(editedTeam);
             }
             else
             {

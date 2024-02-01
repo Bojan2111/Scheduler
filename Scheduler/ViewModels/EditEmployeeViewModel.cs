@@ -12,56 +12,56 @@ namespace Scheduler.ViewModels
     {
         private SchedulerDbContext _context;
 
-        private EditEmployeeDTO _employeeToEdit;
+        private EditEmployeeDTO _itemToEdit;
 
-        public event EventHandler EmployeeUpdated;
+        public event EventHandler ItemUpdated;
 
-        public EditEmployeeDTO EmployeeToEdit
+        public EditEmployeeDTO ItemToEdit
         {
-            get { return _employeeToEdit; }
+            get { return _itemToEdit; }
             set
             {
-                _employeeToEdit = value;
-                OnPropertyChanged(nameof(EmployeeToEdit));
+                _itemToEdit = value;
+                OnPropertyChanged(nameof(ItemToEdit));
             }
         }
 
         public EditEmployeeViewModel()
         {
-            EmployeeToEdit = new EditEmployeeDTO();
+            ItemToEdit = new EditEmployeeDTO();
         }
 
-        public void SetEmployee(EditEmployeeDTO employeeToEdit)
+        public void SetItem(EditEmployeeDTO itemToEdit)
         {
-            EmployeeToEdit = employeeToEdit;
+            ItemToEdit = itemToEdit;
         }
 
-        public void UpdateEmployee(Employee employee)
+        public void UpdateItem(Employee item)
         {
             _context = new SchedulerDbContext();
-            var employeeToUpdate = _context.Employees.FirstOrDefault(x => x.Id == employee.Id);
+            var employeeToUpdate = _context.Employees.FirstOrDefault(x => x.Id == item.Id);
 
             if (employeeToUpdate != null)
             {
-                employeeToUpdate.LastName = employee.LastName;
-                employeeToUpdate.FirstName = employee.FirstName;
-                employeeToUpdate.TeamId = employee.TeamId;
-                employeeToUpdate.TeamRoleId = employee.TeamRoleId;
-                employeeToUpdate.MonthsEmployed = employee.MonthsEmployed;
-                employeeToUpdate.ReligiousHoliday = employee.ReligiousHoliday;
+                employeeToUpdate.LastName = item.LastName;
+                employeeToUpdate.FirstName = item.FirstName;
+                employeeToUpdate.TeamId = item.TeamId;
+                employeeToUpdate.TeamRoleId = item.TeamRoleId;
+                employeeToUpdate.MonthsEmployed = item.MonthsEmployed;
+                employeeToUpdate.ReligiousHoliday = item.ReligiousHoliday;
             }
             else
             {
-                _context.Employees.Add(employee);
+                _context.Employees.Add(item);
             }
 
             _context.SaveChanges();
-            OnEmployeeUpdated();
+            OnItemUpdated();
         }
 
-        private void OnEmployeeUpdated()
+        private void OnItemUpdated()
         {
-            EmployeeUpdated?.Invoke(this, EventArgs.Empty);
+            ItemUpdated?.Invoke(this, EventArgs.Empty);
         }
     }
 }
