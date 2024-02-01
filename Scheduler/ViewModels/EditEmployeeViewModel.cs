@@ -1,4 +1,5 @@
-﻿using Scheduler.Models;
+﻿using Scheduler.Converters;
+using Scheduler.Models;
 using Scheduler.Models.DTOs;
 using System;
 using System.Collections.Generic;
@@ -36,23 +37,27 @@ namespace Scheduler.ViewModels
             ItemToEdit = itemToEdit;
         }
 
-        public void UpdateItem(Employee item)
+        public void UpdateItem(EmployeeDTO item)
         {
             _context = new SchedulerDbContext();
-            var employeeToUpdate = _context.Employees.FirstOrDefault(x => x.Id == item.Id);
+            Team team = _context.Teams.FirstOrDefault(x => x.Name == item.TeamName);
+            TeamRole teamRole = _context.TeamRoles.FirstOrDefault(x => x.Name == item.TeamRoleName);
+
+            Employee converted = EmployeeConverter.ConvertToEntity(item, team, teamRole);
+            var employeeToUpdate = _context.Employees.FirstOrDefault(x => x.Id == converted.Id);
 
             if (employeeToUpdate != null)
             {
-                employeeToUpdate.LastName = item.LastName;
-                employeeToUpdate.FirstName = item.FirstName;
-                employeeToUpdate.TeamId = item.TeamId;
-                employeeToUpdate.TeamRoleId = item.TeamRoleId;
-                employeeToUpdate.MonthsEmployed = item.MonthsEmployed;
-                employeeToUpdate.ReligiousHoliday = item.ReligiousHoliday;
+                employeeToUpdate.LastName = converted.LastName;
+                employeeToUpdate.FirstName = converted.FirstName;
+                employeeToUpdate.TeamId = converted.TeamId;
+                employeeToUpdate.TeamRoleId = converted.TeamRoleId;
+                employeeToUpdate.MonthsEmployed = converted.MonthsEmployed;
+                employeeToUpdate.ReligiousHoliday = converted.ReligiousHoliday;
             }
             else
             {
-                _context.Employees.Add(item);
+                _context.Employees.Add(converted);
             }
 
             _context.SaveChanges();

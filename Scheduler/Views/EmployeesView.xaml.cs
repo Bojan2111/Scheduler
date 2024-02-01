@@ -40,17 +40,19 @@ namespace Scheduler.Views
             }
         }
 
-        private void AddButton_Click(Object sender, RoutedEventArgs e)
+        private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            EmployeesViewModel viewModel = DataContext as EmployeesViewModel;
+            EditEmployeeDTO emptyItem = viewModel.GetEmptyEmployee();
+            EditEmployeeWindow editItemWindow = new EditEmployeeWindow(emptyItem);
+            editItemWindow.ShowDialog();
         }
 
-        //private void AddButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    TeamsViewModel mainViewModel = DataContext as TeamsViewModel;
-        //    EditTeamDTO emptyTeam = mainViewModel.GetEmptyTeam();
-        //    EditTeamWindow editTeamWindow = new EditTeamWindow(emptyTeam);
-        //    editTeamWindow.ShowDialog();
-        //}
+        private void EmployeeDataGrid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            ScrollViewer scv = (ScrollViewer)sender;
+            scv.ScrollToVerticalOffset(scv.VerticalOffset - e.Delta);
+            e.Handled = true; // Set to true to prevent the event from bubbling up
+        }
     }
 }

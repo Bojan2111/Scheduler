@@ -6,12 +6,11 @@
         xmlns:local="clr-namespace:Scheduler.Views"
         xmlns:vms="clr-namespace:Scheduler.ViewModels"
         mc:Ignorable="d"
-        Title="EditEmployeeWindow" Height="450" Width="800">
+        Title="EditEmployeeWindow" Height="300" Width="450">
     <Window.Resources>
         <ObjectDataProvider x:Key="EditEmployeeViewModelProvider" ObjectType="{x:Type vms:EditEmployeeViewModel}" />
     </Window.Resources>
     <Window.DataContext>
-        <!--<Binding Source="{StaticResource EditTeamViewModelProvider}" />-->
         <vms:EditEmployeeViewModel />
     </Window.DataContext>
     <Grid>
@@ -50,7 +49,7 @@
                       ItemsSource="{Binding ItemToEdit.TeamNames}" 
                       DisplayMemberPath="DisplayText" 
                       SelectedValuePath="Value" 
-                      SelectedValue="{Binding ItemToEdit.Employee.Team.Name}" />
+                      SelectedValue="{Binding ItemToEdit.Employee.TeamName}" />
             <TextBlock Grid.Column="0" Grid.Row="3" Text="Teams"/>
 
             <ComboBox Grid.Column="1"
@@ -58,11 +57,11 @@
                       ItemsSource="{Binding ItemToEdit.TeamRoleNames}" 
                       DisplayMemberPath="DisplayText" 
                       SelectedValuePath="Value" 
-                      SelectedValue="{Binding ItemToEdit.Employee.TeamRole.Name}" />
+                      SelectedValue="{Binding ItemToEdit.Employee.TeamRoleName}" />
             <TextBlock Grid.Column="0" Grid.Row="4" Text="Months Employed"/>
             <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding ItemToEdit.Employee.MonthsEmployed}" />
             <TextBlock Grid.Column="0" Grid.Row="5" Text="Religious Holiday"/>
-            <CheckBox Grid.Column="1" Grid.Row="5" IsChecked="{Binding ItemToEdit.Employee.ReligiousHoliday}" />
+            <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding ItemToEdit.Employee.ReligiousHoliday}" />
         </Grid>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>

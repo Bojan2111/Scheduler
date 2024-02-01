@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Scheduler.Converters;
 using Scheduler.Logic;
 using Scheduler.Models;
 using Scheduler.Models.DTOs;
@@ -17,25 +18,25 @@ namespace Scheduler.ViewModels
     {
         private SchedulerDbContext _context;
 
-        private ObservableCollection<Employee> _items;
-        public ObservableCollection<Employee> Items
+        private ObservableCollection<Employee> _employees;
+        public ObservableCollection<Employee> Employees
         {
-            get { return _items; }
+            get { return _employees; }
             set
             {
-                _items = value;
-                OnPropertyChanged(nameof(Items));
+                _employees = value;
+                OnPropertyChanged(nameof(Employees));
             }
         }
 
-        private Employee _item;
-        public Employee Item
+        private Employee _employee;
+        public Employee Employee
         {
-            get { return _item; }
+            get { return _employee; }
             set
             {
-                _item = value;
-                OnPropertyChanged(nameof(Item));
+                _employee = value;
+                OnPropertyChanged(nameof(Employee));
             }
         }
 
@@ -45,38 +46,60 @@ namespace Scheduler.ViewModels
             _context = new SchedulerDbContext();
             LoadContext();
 
-            DeleteCommand = new RelayCommand(DeleteItem);
+            DeleteCommand = new RelayCommand(DeleteEmployee);
         }
 
         private void LoadContext()
         {
-            Items = new ObservableCollection<Employee>(_context.Employees.Include(x => x.Team).Include(x => x.TeamRole));
+            Employees = new ObservableCollection<Employee>(_context.Employees.Include(x => x.Team).Include(x => x.TeamRole));
         }
 
-        private void DeleteItem()
+        private void DeleteEmployee()
         {
             var result = MessageBox.Show("This item will be permanently deleted from the database. Are you sure you want to do this?", "Delete Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (result == MessageBoxResult.Yes)
             {
-                _context.Employees.Remove(Item);
+                _context.Employees.Remove(Employee);
                 _context.SaveChanges();
             }
 
             LoadContext();
         }
 
-        public EditEmployeeDTO GetItemToEdit()
+        public EditEmployeeDTO GetEmployeeToEdit()
+        {
+            EditEmployeeDTO dto = GetOptionsData();
+            dto.Employee = EmployeeConverter.ConvertToDTO(_employee);
+
+            return dto;
+        }
+
+        public EditEmployeeDTO GetEmptyEmployee()
+        {
+            EditEmployeeDTO emptyEmployee = GetOptionsData();
+            emptyEmployee.Employee = new EmployeeDTO()
+            {
+                LastName = string.Empty,
+                FirstName = string.Empty,
+                TeamName = string.Empty,
+                TeamRoleName = string.Empty,
+                ReligiousHoliday = string.Empty,
+            };
+
+            return emptyEmployee;
+        }
+
+        private EditEmployeeDTO GetOptionsData()
         {
             EditEmployeeDTO dto = new EditEmployeeDTO();
-            dto.Employee = _item;
             List<string> teamNames = _context.Teams.Select(x => x.Name).ToList();
             List<TeamRole> teamRoles = _context.TeamRoles.ToList();
 
             dto.TeamNames = new List<DataOptionsItem>();
             dto.TeamRoleNames = new List<DataOptionsItem>();
 
-            foreach (var teamName in  teamNames)
+            foreach (var teamName in teamNames)
             {
                 dto.TeamNames.Add(new DataOptionsItem() { Value = teamName, DisplayText = teamName });
             }
@@ -88,20 +111,5 @@ namespace Scheduler.ViewModels
 
             return dto;
         }
-
-        //public EditTeamDTO GetEmptyItem()
-        //{
-        //    EditEmployeeDTO emptyItem = new EditTeamDTO();
-        //    emptyItem.Employee = new Employee()
-        //    {
-        //        Name = string.Empty,
-        //        ShiftPattern = "DN3",
-        //        CurrentMonth = DateTime.Now.Month,
-        //        CurrentStartDate = DateTime.Now.Date,
-        //        NextMonthStartDate = DateTime.Now.Date.AddMonths(1),
-        //    };
-
-        //    return emptyTeam;
-        //}
     }
 }
