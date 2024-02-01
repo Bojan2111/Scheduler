@@ -1,4 +1,5 @@
-﻿using Scheduler.Logic;
+﻿using Microsoft.EntityFrameworkCore;
+using Scheduler.Logic;
 using Scheduler.Models;
 using Scheduler.Models.DTOs;
 using System;
@@ -16,25 +17,25 @@ namespace Scheduler.ViewModels
     {
         private SchedulerDbContext _context;
 
-        private ObservableCollection<Employee> _employees;
-        public ObservableCollection<Employee> Employees
+        private ObservableCollection<Employee> _items;
+        public ObservableCollection<Employee> Items
         {
-            get { return _employees; }
+            get { return _items; }
             set
             {
-                _employees = value;
-                OnPropertyChanged(nameof(Employees));
+                _items = value;
+                OnPropertyChanged(nameof(Items));
             }
         }
 
-        private Employee _employee;
-        public Employee Employee
+        private Employee _item;
+        public Employee Item
         {
-            get { return _employee; }
+            get { return _item; }
             set
             {
-                _employee = value;
-                OnPropertyChanged(nameof(Employee));
+                _item = value;
+                OnPropertyChanged(nameof(Item));
             }
         }
 
@@ -44,47 +45,54 @@ namespace Scheduler.ViewModels
             _context = new SchedulerDbContext();
             LoadContext();
 
-            DeleteCommand = new RelayCommand(DeleteEmployee);
+            DeleteCommand = new RelayCommand(DeleteItem);
         }
 
         private void LoadContext()
         {
-            Employees = new ObservableCollection<Employee>(_context.Employees);
+            Items = new ObservableCollection<Employee>(_context.Employees.Include(x => x.Team).Include(x => x.TeamRole));
         }
 
-        private void DeleteEmployee()
+        private void DeleteItem()
         {
             var result = MessageBox.Show("This item will be permanently deleted from the database. Are you sure you want to do this?", "Delete Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (result == MessageBoxResult.Yes)
             {
-                _context.Employees.Remove(Employee);
+                _context.Employees.Remove(Item);
                 _context.SaveChanges();
             }
 
             LoadContext();
         }
 
-        public EditEmployeeDTO GetEmployeeToEdit()
+        public EditEmployeeDTO GetItemToEdit()
         {
             EditEmployeeDTO dto = new EditEmployeeDTO();
-            dto.Employee = _employee;
-            dto.TeamNames = _context.Teams.Select(x => x.Name).ToList();
-            dto.TeamRoleNames = _context.TeamRoles.Select(x => x.Name).ToList();
+            dto.Employee = _item;
+            List<string> teamNames = _context.Teams.Select(x => x.Name).ToList();
+            List<TeamRole> teamRoles = _context.TeamRoles.ToList();
+
+            dto.TeamNames = new List<DataOptionsItem>();
+            dto.TeamRoleNames = new List<DataOptionsItem>();
+
+            foreach (var teamName in  teamNames)
+            {
+                dto.TeamNames.Add(new DataOptionsItem() { Value = teamName, DisplayText = teamName });
+            }
+
+            foreach (var teamRole in teamRoles)
+            {
+                dto.TeamRoleNames.Add(new DataOptionsItem() { Value = teamRole.Name, DisplayText = teamRole.Description });
+            }
 
             return dto;
         }
-        //public EditTeamDTO GetTeamToEdit()
-        //{
-        //    EditTeamDTO editTeam = new EditTeamDTO();
-        //    editTeam.Team = SelectedTeam;
-        //    return editTeam;
-        //}
 
-        //public EditTeamDTO GetEmptyTeam()
+        //public EditTeamDTO GetEmptyItem()
         //{
-        //    EditTeamDTO emptyTeam = new EditTeamDTO();
-        //    emptyTeam.Team = new Team()
+        //    EditEmployeeDTO emptyItem = new EditTeamDTO();
+        //    emptyItem.Employee = new Employee()
         //    {
         //        Name = string.Empty,
         //        ShiftPattern = "DN3",

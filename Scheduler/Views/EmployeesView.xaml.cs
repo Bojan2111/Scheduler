@@ -29,7 +29,7 @@ namespace Scheduler.Views
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
-            EmployeesViewModel viewModel = new EmployeesViewModel();
+            EmployeesViewModel viewModel = DataContext as EmployeesViewModel;
 
             if (viewModel != null )
             {
@@ -44,18 +44,6 @@ namespace Scheduler.Views
         {
             throw new NotImplementedException();
         }
-        //private void EditButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    TeamsViewModel teamViewModel = DataContext as TeamsViewModel;
-
-        //    if (teamViewModel != null)
-        //    {
-        //        EditTeamDTO selectedTeam = teamViewModel.GetTeamToEdit();
-
-        //        EditTeamWindow editTeamWindow = new EditTeamWindow(selectedTeam);
-        //        editTeamWindow.ShowDialog();
-        //    }
-        //}
 
         //private void AddButton_Click(object sender, RoutedEventArgs e)
         //{

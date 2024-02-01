@@ -10,7 +10,7 @@ namespace Scheduler.Models.DTOs
     {
         public Employee Employee { get; set; }
 
-        public List<string> TeamNames { get; set; }
-        public List<string> TeamRoleNames { get; set; }
+        public List<DataOptionsItem> TeamNames { get; set; }
+        public List<DataOptionsItem> TeamRoleNames { get; set; }
     }
 }

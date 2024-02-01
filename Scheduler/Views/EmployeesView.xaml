@@ -11,12 +11,21 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <DataGrid Grid.Row="0" ItemsSource="{Binding Employees}" CanUserAddRows="False" IsReadOnly="True" AutoGenerateColumns="False" SelectedItem="{Binding Employee}">
+        <ScrollViewer>
+        <DataGrid Grid.Row="0"
+                  ItemsSource="{Binding Employees}"
+                  CanUserAddRows="False"
+                  IsReadOnly="True"
+                  AutoGenerateColumns="False"
+                  SelectedItem="{Binding Employee}"
+                  ScrollViewer.CanContentScroll="True" 
+                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                  ScrollViewer.HorizontalScrollBarVisibility="Auto">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" />
                 <DataGridTextColumn Header="First Name" Binding="{Binding FirstName}" />
                 <DataGridTextColumn Header="Team" Binding="{Binding Team.Name}" />
-                <DataGridTextColumn Header="TRID" Binding="{Binding TeamRoleId}" />
+                <DataGridTextColumn Header="TRID" Binding="{Binding TeamRole.Name}" />
                 <DataGridTextColumn Header="MnthsEmpl" Binding="{Binding MonthsEmployed}" />
                 <DataGridTextColumn Header="RelHol" Binding="{Binding ReligiousHoliday}" />
                 <DataGridTemplateColumn>
@@ -55,6 +64,7 @@
                 </ContextMenu>
             </DataGrid.ContextMenu>-->
         </DataGrid>
+        </ScrollViewer>
         <Button Grid.Row="1"
                 Content="Add New Team"
                 Height="20"
