@@ -45,6 +45,7 @@ namespace Scheduler.Commands
                         _navigator.CurrentView = new NewScheduleViewModel();
                         break;
                     case ViewType.NationalHolidays:
+                        _navigator.CurrentView = new NationalHolidaysViewModel();
                         break;
                     default:
                         break;

@@ -23,7 +23,7 @@
             <DataTemplate DataType="{x:Type viewmodels:NewScheduleViewModel}">
                 <views:NewScheduleView/>
             </DataTemplate>
-            <DataTemplate DataType="{x:Type viewmodels:NationalHolidays}">
+            <DataTemplate DataType="{x:Type viewmodels:NationalHolidaysViewModel}">
                 <views:NationalHolidaysView/>
             </DataTemplate>
             

@@ -11,34 +11,34 @@ using System.Windows;
 
 namespace Scheduler.ViewModels
 {
-    public class NationalHolidays : ViewModelBase
+    public class NationalHolidaysViewModel : ViewModelBase
     {
         private SchedulerDbContext _context;
 
-        private ObservableCollection<NationalHoliday> _items;
-        public ObservableCollection<NationalHoliday> Items
+        private ObservableCollection<NationalHoliday> _nationalHolidays;
+        public ObservableCollection<NationalHoliday> NationalHolidays
         {
-            get { return _items; }
+            get { return _nationalHolidays; }
             set
             {
-                _items = value;
-                OnPropertyChanged(nameof(Items));
+                _nationalHolidays = value;
+                OnPropertyChanged(nameof(NationalHolidays));
             }
         }
 
-        private NationalHoliday _item;
-        public NationalHoliday Item
+        private NationalHoliday _nationalHoliday;
+        public NationalHoliday NationalHoliday
         {
-            get { return _item; }
+            get { return _nationalHoliday; }
             set
             {
-                _item = value;
-                OnPropertyChanged(nameof(Item));
+                _nationalHoliday = value;
+                OnPropertyChanged(nameof(NationalHoliday));
             }
         }
 
         public ICommand DeleteCommand { get; set; }
-        public NationalHolidays()
+        public NationalHolidaysViewModel()
         {
             _context = new SchedulerDbContext();
             LoadContext();
@@ -48,7 +48,7 @@ namespace Scheduler.ViewModels
 
         private void LoadContext()
         {
-            Items = new ObservableCollection<NationalHoliday>(_context.NationalHolidays);
+            NationalHolidays = new ObservableCollection<NationalHoliday>(_context.NationalHolidays);
         }
 
         private void DeleteNationalHoliday()
@@ -57,7 +57,7 @@ namespace Scheduler.ViewModels
 
             if (result == MessageBoxResult.Yes)
             {
-                _context.NationalHolidays.Remove(Item);
+                _context.NationalHolidays.Remove(NationalHoliday);
                 _context.SaveChanges();
             }
 
@@ -66,9 +66,9 @@ namespace Scheduler.ViewModels
 
         public NationalHoliday GetItemToEdit()
         {
-            NationalHoliday item = new NationalHoliday();
+            //NationalHoliday item = new NationalHoliday();
 
-            return item;
+            return NationalHoliday;
         }
     }
 }

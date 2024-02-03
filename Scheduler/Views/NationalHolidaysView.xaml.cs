@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Scheduler.Models;
+using Scheduler.Models.DTOs;
+using Scheduler.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +26,30 @@ namespace Scheduler.Views
         public NationalHolidaysView()
         {
             InitializeComponent();
+        }
+
+        private void EditButton_Click(object sender, RoutedEventArgs e)
+        {
+            NationalHolidaysViewModel viewModel = DataContext as NationalHolidaysViewModel;
+
+            if (viewModel != null)
+            {
+                NationalHoliday selectedItem = viewModel.GetItemToEdit();
+
+                EditNationalHolidayWindow editItemWindow = new EditNationalHolidayWindow(selectedItem)
+                {
+
+                };
+                editItemWindow.ShowDialog();
+            }
+        }
+
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            NationalHolidaysViewModel viewModel = DataContext as NationalHolidaysViewModel;
+            NationalHoliday emptyNationalHoliday = new NationalHoliday { Name = string.Empty };
+            EditNationalHolidayWindow editNationalHolidayWindow = new EditNationalHolidayWindow(emptyNationalHoliday);
+            editNationalHolidayWindow.ShowDialog();
         }
     }
 }
