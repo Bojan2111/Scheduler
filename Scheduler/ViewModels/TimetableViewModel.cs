@@ -231,7 +231,8 @@ namespace Scheduler.ViewModels
 
                 foreach (Employee employee in employeesInTeam)
                 {
-                    List<Shift> shifts = GenerateShiftsForEmployee(employee, team.CurrentStartDate, nextMonthStartsWithNight);
+                    employee.Team = team;
+                    List<Shift> shifts = GenerateShiftsForEmployee(employee);
                     EmployeeSchedule employeeSchedule = new EmployeeSchedule
                     {
                         EmployeeName = $"{employee.LastName} {employee.FirstName}",
@@ -247,35 +248,132 @@ namespace Scheduler.ViewModels
             }
         }
 
-        private List<Shift> GenerateShiftsForEmployee(Employee employee, DateTime currentStartDate, bool nextMonthStartsWithNight)
+        private List<Shift> GenerateShiftsForEmployee(Employee employee)
         {
-            List<Shift> shifts = new List<Shift>();
-            int year = currentStartDate.Year;
-            int month = currentStartDate.Month;
+            DateTime start = employee.Team.CurrentStartDate;
+            int year = start.Year;
+            int month = employee.Team.CurrentMonth;
             int lastDayOfMonth = DateTime.DaysInMonth(year, month);
+
+            List<Absence> absences = _context.Absences
+                .Where(x => x.EmployeeId == employee.Id && x.Year == year && x.Month == month)
+                .ToList();
+            List<NationalHoliday> nationalHolidays = _context.NationalHolidays
+                .Where(x => x.Date.Month == month)
+                .ToList();
+
+            List<int> datesAbsent = new List<int>();
+            List<Shift> shifts = new List<Shift>();
+
+            if (absences.Count > 0)
+            {
+                foreach (Absence absence in absences)
+                {
+                    for (int i = absence.StartDay; i <= absence.EndDay; i++)
+                    {
+                        datesAbsent.Add(i);
+                    }
+                }
+            }
+
             // Logic to generate shifts for the employee here based on the provided conditions.
             // Use lastDayOfMonth, nextMonthStartsWithNight, absences, national holidays, etc.
             // Add shifts to the 'shifts' list.
-
-            for (int day = 1; day <= lastDayOfMonth; day++)
+            int dateCount = 1;
+            while (dateCount <= lastDayOfMonth)
             {
-                DateTime shiftDate = new DateTime(year, month, day);
-                string shiftName = CalculateShiftName(day, currentStartDate, nextMonthStartsWithNight);
+                string shiftName = "";
+                string pattern = employee.Team.ShiftPattern;
+                if (pattern == "DN3")
+                {
+                    if (datesAbsent.Contains(dateCount))
+                    {
+                        string absenceType = absences.FirstOrDefault(x => dateCount >= x.StartDay && dateCount <= x.EndDay).Type;
+                        shiftName = absenceType;
+                    }
+                    else if (employee.Team.NextMonthStartsWithNight && dateCount == 1)
+                    {
+                        shiftName = "N";
+                    }
+                    else if ((dateCount - start.Day) % 5 == 0)
+                    {
+                        shiftName = "D";
+                    }
+                    else if ((dateCount - start.Day) % 5 == 1)
+                    {
+                        shiftName = "N";
+                    }
+                    else
+                    {
+                        dateCount++;
+                        continue;
+                    }
+                }
+                else
+                {
+                    DateTime testingDate = new DateTime(year, month, dateCount);
+                    bool isNotWeekend = (testingDate.DayOfWeek != DayOfWeek.Saturday) && (testingDate.DayOfWeek != DayOfWeek.Sunday);
+                    bool isNotNationalHoliday = nationalHolidays.FirstOrDefault(x => x.Date == new DateTime(year, month, dateCount)) == null;
+                    
+                    if (datesAbsent.Contains(dateCount))
+                    {
+                        string absenceType = absences.FirstOrDefault(x => dateCount >= x.StartDay && dateCount <= x.EndDay).Type;
+                        shiftName = absenceType;
+                    }
+                    else if (isNotWeekend && isNotNationalHoliday)
+                    {
+                        shiftName = pattern;
+                    }
+                    else
+                    {
+                        // TODO: Add marker for non-workdays
+                        dateCount++;
+                        continue;
+                    }
 
-                // Check for absences, national holidays, weekends, etc.
-                // Check if shift is final in current month (D cannot be more than lastDayOfMonth - 4, same for N, except when D is last)
+                    //shifts.Add(new Shift(shiftName, month, new DateTime(year, month, dateCount), emp.Id));
+                    //shifts.Add(new Shift()
+                    //{
+                    //    Name = shiftName,
+                    //    Date = new DateTime(year, month, dateCount),
+                    //    Month = month,
+                    //    EmployeeId = employee.Id,
+                    //});
 
-                Shift shift = new Shift
+                    dateCount++;
+                }
+
+                //shifts.Add(new Shift(shiftName, month, new DateTime(year, month, dateCount), employee.Id));
+                shifts.Add(new Shift()
                 {
                     Name = shiftName,
                     Month = month,
-                    Date = shiftDate,
                     EmployeeId = employee.Id,
-                    Employee = employee
-                };
+                    Date = new DateTime(year, month, dateCount)
+                });
 
-                shifts.Add(shift);
+                dateCount++;
             }
+
+            //for (int day = 1; day <= lastDayOfMonth; day++)
+            //{
+            //    DateTime shiftDate = new DateTime(year, month, day);
+            //    string shiftName = CalculateShiftName(day, employee.Team.CurrentStartDate, employee.Team.NextMonthStartsWithNight);
+
+            //    // Check for absences, national holidays, weekends, etc.
+            //    // Check if shift is final in current month (D cannot be more than lastDayOfMonth - 4, same for N, except when D is last)
+
+            //    Shift shift = new Shift
+            //    {
+            //        Name = shiftName,
+            //        Month = month,
+            //        Date = shiftDate,
+            //        EmployeeId = employee.Id,
+            //        Employee = employee
+            //    };
+
+            //    shifts.Add(shift);
+            //}
 
             return shifts;
         }
