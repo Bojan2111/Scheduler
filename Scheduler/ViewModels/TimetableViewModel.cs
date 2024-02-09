@@ -116,6 +116,7 @@ namespace Scheduler.ViewModels
             // db query to get all shifts for each employee for each team for specific month.
             // Month is in shift class, employeeId is in shift class, teamId is in employee class.
             
+            
 
             if (_context.Shifts.Count() == 0)
             {
@@ -155,6 +156,49 @@ namespace Scheduler.ViewModels
 
                     TeamSchedules.Add(teamSchedule);
                 }
+            }
+        }
+
+        private void GenerateWeekDays(int year, int month, int lastDay)
+        {
+            List<NationalHoliday> nationalHolidays = _context.NationalHolidays.ToList();
+            for (int i = 1; i <= lastDay; i++)
+            {
+                DateTime testingDate = new DateTime(year, month, i);
+                bool isNationalHoliday = nationalHolidays.FirstOrDefault(x => x.Date == new DateTime(year, month, i)) != null;
+                DayType dayType = new DayType()
+                {
+                    Day = i,
+                    IsNotWorkDay = isNationalHoliday,
+                };
+                switch (testingDate.DayOfWeek)
+                {
+                    case DayOfWeek.Monday:
+                        dayType.DayName = "P";
+                        break;
+                    case DayOfWeek.Tuesday:
+                        dayType.DayName = "U";
+                        break;
+                    case DayOfWeek.Wednesday:
+                        dayType.DayName = "S";
+                        break;
+                    case DayOfWeek.Thursday:
+                        dayType.DayName = "Č";
+                        break;
+                    case DayOfWeek.Friday:
+                        dayType.DayName = "P";
+                        break;
+                    case DayOfWeek.Saturday:
+                        dayType.DayName = "S";
+                        dayType.IsNotWorkDay = true;
+                        break;
+                    case DayOfWeek.Sunday:
+                        dayType.DayName = "N";
+                        dayType.IsNotWorkDay = true;
+                        break;
+                }
+                dayType.IsNotWorkDay = true;
+                Schedule.Dates.Add(dayType);
             }
         }
 
@@ -215,15 +259,17 @@ namespace Scheduler.ViewModels
             //Schedule = new SchedulesDTO();
             List<TeamSchedule> teamSchedules = new List<TeamSchedule>();
             List<Team> teams =_context.Teams.ToList();
+            Team testTeam = teams[0];
+            int year = testTeam.CurrentStartDate.Year;
+            int month = testTeam.CurrentMonth;
+            int lastDayOfMonth = DateTime.DaysInMonth(year, month);
+            GenerateWeekDays(year, month, lastDayOfMonth);
 
             foreach (Team team in teams)
             {
                 TeamSchedule teamSchedule = new TeamSchedule();
                 teamSchedule.Id = team.Id;
                 teamSchedule.TeamName = team.Name;
-                int year = team.CurrentStartDate.Year;
-                int month = team.CurrentMonth;
-                int lastDayOfMonth = DateTime.DaysInMonth(year, month);
                 bool nextMonthStartsWithNight = team.NextMonthStartsWithNight;
                 DateTime nextMonthStartDate = CalculateNextMonthStartDate(team.CurrentStartDate, lastDayOfMonth, nextMonthStartsWithNight);
 
@@ -246,6 +292,7 @@ namespace Scheduler.ViewModels
                 teamSchedules.Add(teamSchedule);
                 //Schedule.TeamSchedules.Add(teamSchedule);
             }
+            Schedule.TeamSchedules = teamSchedules;
         }
 
         private List<Shift> GenerateShiftsForEmployee(Employee employee)
@@ -282,6 +329,7 @@ namespace Scheduler.ViewModels
             int dateCount = 1;
             while (dateCount <= lastDayOfMonth)
             {
+                Shift shift = new Shift();
                 string shiftName = "";
                 string pattern = employee.Team.ShiftPattern;
                 if (pattern == "DN3")
@@ -326,31 +374,23 @@ namespace Scheduler.ViewModels
                     }
                     else
                     {
-                        // TODO: Add marker for non-workdays
                         dateCount++;
                         continue;
                     }
 
-                    //shifts.Add(new Shift(shiftName, month, new DateTime(year, month, dateCount), emp.Id));
-                    //shifts.Add(new Shift()
-                    //{
-                    //    Name = shiftName,
-                    //    Date = new DateTime(year, month, dateCount),
-                    //    Month = month,
-                    //    EmployeeId = employee.Id,
-                    //});
-
                     dateCount++;
                 }
 
-                //shifts.Add(new Shift(shiftName, month, new DateTime(year, month, dateCount), employee.Id));
-                shifts.Add(new Shift()
+                if (shiftName != "")
                 {
-                    Name = shiftName,
-                    Month = month,
-                    EmployeeId = employee.Id,
-                    Date = new DateTime(year, month, dateCount)
-                });
+                    shift.Name = shiftName;
+                    shift.Date = new DateTime(year, month, dateCount);
+                    shift.Month = month;
+                    shift.EmployeeId = employee.Id;
+                    shifts.Add(shift);
+                    _context.Shifts.Add(shift);
+                    _context.SaveChanges();
+                }
 
                 dateCount++;
             }

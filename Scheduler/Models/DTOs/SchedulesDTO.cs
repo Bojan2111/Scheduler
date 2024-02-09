@@ -9,7 +9,7 @@ namespace Scheduler.Models.DTOs
     public class SchedulesDTO
     {
         public int Month { get; set; }
-        public List<int> Dates { get; set; }
+        public List<DayType> Dates { get; set; }
         public List<TeamSchedule> TeamSchedules { get; set; }
     }
 }
