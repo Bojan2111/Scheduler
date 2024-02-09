@@ -6,8 +6,8 @@
              xmlns:local="clr-namespace:Scheduler.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+    <StackPanel Orientation="Vertical">
         <TextBlock Text="View Timetable for the current month"/>
-        <TextBlock Text="{Binding TeamSchedules}"/>
-    </Grid>
+        <TextBlock Text="{Binding}"/>
+    </StackPanel>
 </UserControl>
