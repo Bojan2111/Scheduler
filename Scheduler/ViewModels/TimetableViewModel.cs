@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows;
+using Microsoft.EntityFrameworkCore;
 
 namespace Scheduler.ViewModels
 {
@@ -94,15 +95,16 @@ namespace Scheduler.ViewModels
 
         private void LoadContext()
         {
-            List<Shift> Shifts = _context.Shifts.ToList();
+            //List<Shift> Shifts = _context.Shifts.ToList();
+            bool hasShifts = _context.Shifts.Any();
 
-            if (Shifts.Count() == 0)
+            if (!hasShifts)
             {
                 GenerateShiftsForEmployees();
             }
-            else
+            else // sad pogledaj ovo da radi kako treba
             {
-                int desiredMonth = 1;
+                int desiredMonth = 1; // probaj ovo da dobijes kao user assigned value iz kalendara ili tako nesto...
 
                 // Fetch shifts for each employee for each team for the specific month.
                 var employeeShifts = _context.Shifts
@@ -114,7 +116,7 @@ namespace Scheduler.ViewModels
                     .GroupBy(shift => new { TeamId = shift.Employee.TeamId, EmployeeId = shift.EmployeeId })
                     .ToList();
 
-                // Now, you can create TeamSchedule and EmployeeSchedule objects.
+                // Create TeamSchedule and EmployeeSchedule objects.
                 TeamSchedules.Clear();
                 foreach (var group in groupedShifts)
                 {
@@ -196,10 +198,11 @@ namespace Scheduler.ViewModels
                 TeamSchedule teamSchedule = new TeamSchedule();
                 teamSchedule.Id = team.Id;
                 teamSchedule.TeamName = team.Name;
+                teamSchedule.EmployeeSchedules = new List<EmployeeSchedule>();
                 bool nextMonthStartsWithNight = team.NextMonthStartsWithNight;
                 DateTime nextMonthStartDate = CalculateNextMonthStartDate(team.CurrentStartDate, lastDayOfMonth, nextMonthStartsWithNight);
 
-                List<Employee> employeesInTeam = _context.Employees.Where(e => e.TeamId == team.Id).ToList();
+                List<Employee> employeesInTeam = _context.Employees.Where(e => e.TeamId == team.Id).Include(e => e.TeamRole).ToList();
 
                 foreach (Employee employee in employeesInTeam)
                 {
@@ -301,10 +304,10 @@ namespace Scheduler.ViewModels
                         continue;
                     }
 
-                    dateCount++;
+                    //dateCount++;
                 }
 
-                if (shiftName != "")
+                if (shiftName != "") // something wrong with dateCount
                 {
                     shift.Name = shiftName;
                     shift.Date = new DateTime(year, month, dateCount);
