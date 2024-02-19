@@ -6,8 +6,36 @@
              xmlns:local="clr-namespace:Scheduler.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <StackPanel Orientation="Vertical">
+    <Grid>
+        <DataGrid ItemsSource="{Binding Schedule.TeamSchedules}" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="TeamName" Binding="{Binding TeamName}" />
+                <DataGridTextColumn Header="Schedule for" Binding="{Binding MonthYear}" />
+                <!-- Add more columns as needed -->
+            </DataGrid.Columns>
+
+            <!-- Nested DataGrid for EmployeeSchedules -->
+            <DataGrid ItemsSource="{Binding EmployeeSchedules}" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="EmployeeName" Binding="{Binding EmployeeName}" />
+                    <DataGridTextColumn Header="Role" Binding="{Binding EmployeeRole}" />
+                    <!-- Add more columns as needed -->
+                </DataGrid.Columns>
+
+                <!-- Use an ItemsControl for displaying shifts in columns -->
+                <ItemsControl ItemsSource="{Binding Shifts}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding ShiftName}" />
+                            <!-- Customize as needed -->
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </DataGrid>
+        </DataGrid>
+    </Grid>
+    <!--<StackPanel Orientation="Vertical">
         <TextBlock Text="View Timetable for the current month"/>
         <TextBlock Text="{Binding Schedule}"/>
-    </StackPanel>
+    </StackPanel>-->
 </UserControl>

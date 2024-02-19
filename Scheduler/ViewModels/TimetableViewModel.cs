@@ -17,10 +17,6 @@ namespace Scheduler.ViewModels
     {
         private SchedulerDbContext _context;
 
-        //private ObservableCollection<TeamSchedule> _teamSchedules;
-
-        //private ObservableCollection<EmployeeSchedule> _employeeSchedules;
-
         private SchedulesDTO _schedule;
 
         public SchedulesDTO Schedule
@@ -32,25 +28,6 @@ namespace Scheduler.ViewModels
                 OnPropertyChanged(nameof(Schedule));
             }
         }
-        //public ObservableCollection<TeamSchedule> TeamSchedules
-        //{
-        //    get { return _teamSchedules; }
-        //    set
-        //    {
-        //        _teamSchedules = value;
-        //        OnPropertyChanged(nameof(TeamSchedules));
-        //    }
-        //}
-
-        //public ObservableCollection<EmployeeSchedule> EmployeeSchedules
-        //{
-        //    get { return _employeeSchedules; }
-        //    set
-        //    {
-        //        _employeeSchedules = value;
-        //        OnPropertyChanged(nameof(EmployeeSchedules));
-        //    }
-        //}
 
         private Shift _selectedShift;
 
@@ -99,7 +76,7 @@ namespace Scheduler.ViewModels
             {
                 GenerateShiftsForEmployees();
             }
-            else // sad pogledaj ovo da radi kako treba
+            else
             {
                 int desiredMonth = 1;
 
@@ -226,7 +203,7 @@ namespace Scheduler.ViewModels
                 {
                     employee.Team = team;
                     List<Shift> shifts = GenerateShiftsForEmployee(employee);
-                    EmployeeSchedule employeeSchedule = new EmployeeSchedule // ArgumentNullException - not set to an instance of obj
+                    EmployeeSchedule employeeSchedule = new EmployeeSchedule
                     {
                         EmployeeName = $"{employee.LastName} {employee.FirstName}",
                         EmployeeRole = employee.TeamRole.Name,
@@ -237,7 +214,6 @@ namespace Scheduler.ViewModels
                 }
 
                 teamSchedules.Add(teamSchedule);
-                //Schedule.TeamSchedules.Add(teamSchedule);
             }
             Schedule.TeamSchedules = teamSchedules;
         }
@@ -321,11 +297,9 @@ namespace Scheduler.ViewModels
                         dateCount++;
                         continue;
                     }
-
-                    //dateCount++;
                 }
 
-                if (shiftName != "") // something wrong with dateCount
+                if (shiftName != "")
                 {
                     shift.Name = shiftName;
                     shift.Date = new DateTime(year, month, dateCount);
