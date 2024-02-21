@@ -10,6 +10,9 @@ namespace Scheduler.Models.DTOs
     {
         public int Id { get; set; }
         public string TeamName { get; set; }
+        public string MonthName { get; set; }
+        public int Year { get; set; }
+        public List<DayType> Dates { get; set; }
         public List<EmployeeSchedule> EmployeeSchedules { get; set; }
     }
 }

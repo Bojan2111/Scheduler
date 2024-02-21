@@ -1,0 +1,13 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style x:Key="IsNotWorkDay" TargetType="TextBlock">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=Day, Path=IsNotWorkDay}" Value="True">
+                <Setter Property="Foreground" Value="Red" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ElementName=Day, Path=IsNotWorkDay}" Value="False">
+                <Setter Property="Foreground" Value="Green" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>

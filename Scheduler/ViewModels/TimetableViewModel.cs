@@ -17,19 +17,30 @@ namespace Scheduler.ViewModels
     {
         private SchedulerDbContext _context;
 
-        private SchedulesDTO _schedule;
+        //private SchedulesDTO _schedule;
 
-        public SchedulesDTO Schedule
-        {
-            get { return _schedule; }
-            set
-            {
-                _schedule = value;
-                OnPropertyChanged(nameof(Schedule));
-            }
-        }
+        private ObservableCollection<TeamSchedule> _teamSchedules;
 
         private Shift _selectedShift;
+        //public SchedulesDTO Schedule
+        //{
+        //    get { return _schedule; }
+        //    set
+        //    {
+        //        _schedule = value;
+        //        OnPropertyChanged(nameof(Schedule));
+        //    }
+        //}
+
+        public ObservableCollection<TeamSchedule> TeamSchedules
+        {
+            get { return _teamSchedules; }
+            set
+            {
+                _teamSchedules = value;
+                OnPropertyChanged(nameof(TeamSchedules));
+            }
+        }
 
         public Shift SelectedShift
         {
@@ -57,12 +68,13 @@ namespace Scheduler.ViewModels
         public TimetableViewModel()
         {
             _context = new SchedulerDbContext();
-            Schedule = new SchedulesDTO()
-            {
-                Month = 1,
-                Dates = new List<DayType>(),
-                TeamSchedules = new List<TeamSchedule>(),
-            };
+            TeamSchedules = new ObservableCollection<TeamSchedule>();
+            //Schedule = new SchedulesDTO()
+            //{
+            //    Month = 1,
+            //    Dates = new List<DayType>(),
+            //    TeamSchedules = new List<TeamSchedule>(),
+            //};
             LoadContext();
 
             DeleteCommand = new RelayCommand(DeleteShift);
@@ -90,11 +102,12 @@ namespace Scheduler.ViewModels
                     .GroupBy(shift => new { TeamId = shift.Employee.TeamId, EmployeeId = shift.EmployeeId })
                     .ToList();
 
-                Schedule.TeamSchedules.Clear();
+                // TeamSchedules.Clear(); // Vidi da li ti ovo stvarno treba ???
 
                 int year = employeeShifts.First().Date.Year;
                 int month = employeeShifts.First().Month;
-                GenerateWeekDays(year, month);
+                List<DayType> days = GenerateWeekDays(year, month);
+                //GenerateWeekDays(year, month);
 
                 foreach (var teamGroup in groupedShifts.GroupBy(g => g.Key.TeamId))
                 {
@@ -103,6 +116,9 @@ namespace Scheduler.ViewModels
                     {
                         Id = teamId,
                         TeamName = _context.Teams.FirstOrDefault(x => x.Id == teamId)?.Name,
+                        MonthName = GenerateLocalMonthName(month),
+                        Year = year,
+                        Dates = days,
                         EmployeeSchedules = new List<EmployeeSchedule>()
                     };
 
@@ -128,17 +144,54 @@ namespace Scheduler.ViewModels
                         teamSchedule.EmployeeSchedules.Add(employeeSchedule);
                     }
 
-                    Schedule.TeamSchedules.Add(teamSchedule);
+                    TeamSchedules.Add(teamSchedule);
+                    // System.NullReferenceException: 'Object reference not set to an instance of an object.'
+                    // Scheduler.ViewModels.TimetableViewModel.TeamSchedules.get returned null.
                 }
             }
         }
 
-        private void GenerateWeekDays(int year, int month)
+        private string GenerateLocalMonthName(int month)
         {
+            switch (month)
+            {
+                case 1:
+                    return "Januar";
+                case 2:
+                    return "Februar";
+                case 3:
+                    return "Mart";
+                case 4:
+                    return "April";
+                case 5:
+                    return "Maj";
+                case 6:
+                    return "Jun";
+                case 7:
+                    return "Jul";
+                case 8:
+                    return "Avgust";
+                case 9:
+                    return "Septembar";
+                case 10:
+                    return "Oktobar";
+                case 11:
+                    return "Novembar";
+                case 12:
+                    return "Decembar";
+                default:
+                    return "Nepoznat mesec";
+            }
+        }
+
+        private List<DayType> GenerateWeekDays(int year, int month)
+        {
+            List<DayType> days = new List<DayType>();
             int lastDay = DateTime.DaysInMonth(year, month);
             List<NationalHoliday> nationalHolidays = _context.NationalHolidays
                 .Where(n => n.Date.Year == year && n.Date.Month == month)
                 .ToList();
+            
             for (int i = 1; i <= lastDay; i++)
             {
                 DateTime testingDate = new DateTime(year, month, i);
@@ -174,12 +227,12 @@ namespace Scheduler.ViewModels
                         dayType.IsNotWorkDay = true;
                         break;
                 }
-                Schedule.Dates.Add(dayType);
+                days.Add(dayType);
             }
+            return days;
         }
         public void GenerateShiftsForEmployees()
         {
-            //Schedule = new SchedulesDTO();
             List<TeamSchedule> teamSchedules = new List<TeamSchedule>();
             List<Team> teams =_context.Teams.ToList();
             Team testTeam = teams[0];
@@ -213,9 +266,9 @@ namespace Scheduler.ViewModels
                     teamSchedule.EmployeeSchedules.Add(employeeSchedule);
                 }
 
-                teamSchedules.Add(teamSchedule);
+                TeamSchedules.Add(teamSchedule);
             }
-            Schedule.TeamSchedules = teamSchedules;
+            //Schedule.TeamSchedules = teamSchedules;
         }
 
         private List<Shift> GenerateShiftsForEmployee(Employee employee)

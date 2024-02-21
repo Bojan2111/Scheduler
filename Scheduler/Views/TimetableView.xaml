@@ -6,34 +6,128 @@
              xmlns:local="clr-namespace:Scheduler.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <!-- ItemsControl for each TeamSchedule -->
+            <ItemsControl ItemsSource="{Binding TeamSchedules}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Background="AliceBlue"
+                              Margin="10 0">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            
+                            <Grid Background="AntiqueWhite"
+                                  Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Margin="0 5" Text="{Binding TeamName}"/>
+                                <TextBlock Grid.Column="1" Margin="0 5" Text="{Binding MonthName}"/>
+                                <TextBlock Grid.Column="2" Margin="0 5" Text="{Binding Year}"/>
+                            </Grid>
+
+                            <!-- Timetable header with days -->
+                            <Grid Background="Aqua"
+                                  Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Margin="0 5" Text="Employee Name"/>
+                                <TextBlock Grid.Column="1" Margin="0 5" Text="Role"/>
+
+                                <!-- ItemsControl for each Day in the Dates list -->
+                                <ItemsControl ItemsSource="{Binding Dates}" Grid.Column="2">
+
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Day}"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Grid>
+
+                            <!-- ItemsControl for each EmployeeSchedule -->
+                            <StackPanel Orientation="Vertical"
+                                        Background="Green"
+                                        Grid.Row="2">
+                                <ItemsControl ItemsSource="{Binding EmployeeSchedules}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Background="LightGreen">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="auto"/>
+                                                    <ColumnDefinition Width="auto"/>
+                                                    <ColumnDefinition Width="auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Margin="0 5" Text="{Binding EmployeeName}"/>
+                                                <TextBlock Grid.Column="1" Margin="0 5" Text="{Binding EmployeeRole}"/>
+
+                                                <!-- ItemsControl for each Shift -->
+                                                <ItemsControl ItemsSource="{Binding Shifts}" Grid.Column="2">
+
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <StackPanel Orientation="Horizontal"/>
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Margin="0 3" Text="{Binding Name}"/>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                            
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </ScrollViewer>
+    <!--<Grid>
         <DataGrid ItemsSource="{Binding Schedule.TeamSchedules}" AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="TeamName" Binding="{Binding TeamName}" />
                 <DataGridTextColumn Header="Schedule for" Binding="{Binding MonthYear}" />
-                <!-- Add more columns as needed -->
             </DataGrid.Columns>
 
-            <!-- Nested DataGrid for EmployeeSchedules -->
             <DataGrid ItemsSource="{Binding EmployeeSchedules}" AutoGenerateColumns="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="EmployeeName" Binding="{Binding EmployeeName}" />
                     <DataGridTextColumn Header="Role" Binding="{Binding EmployeeRole}" />
-                    <!-- Add more columns as needed -->
                 </DataGrid.Columns>
 
-                <!-- Use an ItemsControl for displaying shifts in columns -->
                 <ItemsControl ItemsSource="{Binding Shifts}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding ShiftName}" />
-                            <!-- Customize as needed -->
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </DataGrid>
         </DataGrid>
-    </Grid>
+    </Grid>-->
     <!--<StackPanel Orientation="Vertical">
         <TextBlock Text="View Timetable for the current month"/>
         <TextBlock Text="{Binding Schedule}"/>
