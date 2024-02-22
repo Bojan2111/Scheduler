@@ -17,20 +17,9 @@ namespace Scheduler.ViewModels
     {
         private SchedulerDbContext _context;
 
-        //private SchedulesDTO _schedule;
-
         private ObservableCollection<TeamSchedule> _teamSchedules;
 
         private Shift _selectedShift;
-        //public SchedulesDTO Schedule
-        //{
-        //    get { return _schedule; }
-        //    set
-        //    {
-        //        _schedule = value;
-        //        OnPropertyChanged(nameof(Schedule));
-        //    }
-        //}
 
         public ObservableCollection<TeamSchedule> TeamSchedules
         {
@@ -69,12 +58,6 @@ namespace Scheduler.ViewModels
         {
             _context = new SchedulerDbContext();
             TeamSchedules = new ObservableCollection<TeamSchedule>();
-            //Schedule = new SchedulesDTO()
-            //{
-            //    Month = 1,
-            //    Dates = new List<DayType>(),
-            //    TeamSchedules = new List<TeamSchedule>(),
-            //};
             LoadContext();
 
             DeleteCommand = new RelayCommand(DeleteShift);
@@ -102,12 +85,9 @@ namespace Scheduler.ViewModels
                     .GroupBy(shift => new { TeamId = shift.Employee.TeamId, EmployeeId = shift.EmployeeId })
                     .ToList();
 
-                // TeamSchedules.Clear(); // Vidi da li ti ovo stvarno treba ???
-
                 int year = employeeShifts.First().Date.Year;
                 int month = employeeShifts.First().Month;
                 List<DayType> days = GenerateWeekDays(year, month);
-                //GenerateWeekDays(year, month);
 
                 foreach (var teamGroup in groupedShifts.GroupBy(g => g.Key.TeamId))
                 {
@@ -125,30 +105,65 @@ namespace Scheduler.ViewModels
                     foreach (var employeeGroup in teamGroup)
                     {
                         var employeeId = employeeGroup.Key.EmployeeId;
-
+                        var employeeRole = employeeGroup.First().Employee.TeamRole.Name;
+                        var shifts = employeeGroup.Select(shift => new Shift
+                        {
+                            Id = shift.Id,
+                            Name = shift.Name,
+                            EmployeeId = employeeId,
+                            Date = shift.Date,
+                            Month = shift.Month
+                        }).ToList();
+                        List<ShiftDisplayDTO> allShiftsInMonth = GenerateAllShiftsInMonth(shifts, days);
                         var employeeSchedule = new EmployeeSchedule
                         {
                             Id = employeeId,
                             EmployeeName = $"{employeeGroup.First().Employee.LastName} {employeeGroup.First().Employee.FirstName}",
-                            EmployeeRole = employeeGroup.First().Employee.TeamRole.Name,
-                            Shifts = employeeGroup.Select(shift => new Shift
-                            {
-                                Id = shift.Id,
-                                Name = shift.Name,
-                                EmployeeId = employeeId,
-                                Date = shift.Date,
-                                Month = shift.Month
-                            }).ToList()
+                            EmployeeRole = employeeRole == "--" ? "" : employeeRole,
+                            Shifts = allShiftsInMonth,
                         };
 
                         teamSchedule.EmployeeSchedules.Add(employeeSchedule);
                     }
 
                     TeamSchedules.Add(teamSchedule);
-                    // System.NullReferenceException: 'Object reference not set to an instance of an object.'
-                    // Scheduler.ViewModels.TimetableViewModel.TeamSchedules.get returned null.
                 }
             }
+        }
+
+        private List<ShiftDisplayDTO> GenerateAllShiftsInMonth(List<Shift> shifts, List<DayType> days)
+        {
+            int year = shifts.First().Date.Year;
+            int month = shifts.First().Month;
+            int employeeId = shifts.First().EmployeeId;
+            List<ShiftDisplayDTO> allShifts = new List<ShiftDisplayDTO>();
+
+            foreach(DayType day in days)
+            {
+                Shift shiftOnThatDay = shifts.Find(x => x.Date.Day == day.Day);
+                if (shiftOnThatDay != null)
+                {
+                    allShifts.Add(new ShiftDisplayDTO
+                    {
+                        Id = shiftOnThatDay.Id,
+                        Name = shiftOnThatDay.Name,
+                        EmployeeId = shiftOnThatDay.EmployeeId,
+                        Date = shiftOnThatDay.Date,
+                        IsNotWorkDay = day.IsNotWorkDay,
+                    });
+                }
+                else
+                {
+                    allShifts.Add(new ShiftDisplayDTO
+                    {
+                        Name = "",
+                        EmployeeId = employeeId,
+                        Date = new DateTime(year, month, day.Day),
+                        IsNotWorkDay = day.IsNotWorkDay,
+                    });
+                }
+            }
+            return allShifts;
         }
 
         private string GenerateLocalMonthName(int month)
@@ -255,7 +270,7 @@ namespace Scheduler.ViewModels
                 foreach (Employee employee in employeesInTeam)
                 {
                     employee.Team = team;
-                    List<Shift> shifts = GenerateShiftsForEmployee(employee);
+                    List<ShiftDisplayDTO> shifts = new List<ShiftDisplayDTO>(); //GenerateShiftsForEmployee(employee);
                     EmployeeSchedule employeeSchedule = new EmployeeSchedule
                     {
                         EmployeeName = $"{employee.LastName} {employee.FirstName}",
@@ -268,7 +283,6 @@ namespace Scheduler.ViewModels
 
                 TeamSchedules.Add(teamSchedule);
             }
-            //Schedule.TeamSchedules = teamSchedules;
         }
 
         private List<Shift> GenerateShiftsForEmployee(Employee employee)

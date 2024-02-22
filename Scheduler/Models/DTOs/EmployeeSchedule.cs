@@ -11,6 +11,6 @@ namespace Scheduler.Models.DTOs
         public int Id { get; set; }
         public string EmployeeName { get; set; }
         public string EmployeeRole { get; set; }
-        public List<Shift> Shifts { get; set; }
+        public List<ShiftDisplayDTO> Shifts { get; set; }
     }
 }

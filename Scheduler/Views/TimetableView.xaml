@@ -5,15 +5,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Scheduler.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
+             d:DesignHeight="500" d:DesignWidth="800">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
         <StackPanel>
             <!-- ItemsControl for each TeamSchedule -->
             <ItemsControl ItemsSource="{Binding TeamSchedules}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid Background="AliceBlue"
-                              Margin="10 0">
+                              Margin="10">
 
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto"/>
@@ -41,8 +41,8 @@
                                     <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Margin="0 5" Text="Employee Name"/>
-                                <TextBlock Grid.Column="1" Margin="0 5" Text="Role"/>
+                                <TextBlock Grid.Column="0" Width="150" Margin="0 5" Text="Employee Name"/>
+                                <TextBlock Grid.Column="1" Width="30" Margin="0 5" Text="Role"/>
 
                                 <!-- ItemsControl for each Day in the Dates list -->
                                 <ItemsControl ItemsSource="{Binding Dates}" Grid.Column="2">
@@ -55,7 +55,20 @@
 
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding Day}"/>
+                                            <TextBlock Width="30" Padding="5" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Day}">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsNotWorkDay}" Value="True">
+                                                                <Setter Property="Background" Value="LightPink"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding IsNotWorkDay}" Value="False">
+                                                                <Setter Property="Background" Value="AliceBlue"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
@@ -74,8 +87,8 @@
                                                     <ColumnDefinition Width="auto"/>
                                                     <ColumnDefinition Width="auto"/>
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock Grid.Column="0" Margin="0 5" Text="{Binding EmployeeName}"/>
-                                                <TextBlock Grid.Column="1" Margin="0 5" Text="{Binding EmployeeRole}"/>
+                                                <TextBlock Grid.Column="0" Width="150" Margin="0 5" Text="{Binding EmployeeName}"/>
+                                                <TextBlock Grid.Column="1" Width="30" Margin="0 5" Text="{Binding EmployeeRole}"/>
 
                                                 <!-- ItemsControl for each Shift -->
                                                 <ItemsControl ItemsSource="{Binding Shifts}" Grid.Column="2">
@@ -88,7 +101,20 @@
 
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate>
-                                                            <TextBlock Margin="0 3" Text="{Binding Name}"/>
+                                                            <TextBlock Width="30" Padding="5" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Name}">
+                                                                <TextBlock.Style>
+                                                                    <Style TargetType="TextBlock">
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding IsNotWorkDay}" Value="True">
+                                                                                <Setter Property="Background" Value="LightPink"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding IsNotWorkDay}" Value="False">
+                                                                                <Setter Property="Background" Value="AliceBlue"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </TextBlock.Style>
+                                                            </TextBlock>
                                                         </DataTemplate>
                                                     </ItemsControl.ItemTemplate>
                                                 </ItemsControl>
