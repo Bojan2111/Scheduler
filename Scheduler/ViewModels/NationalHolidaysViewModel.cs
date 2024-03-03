@@ -66,8 +66,6 @@ namespace Scheduler.ViewModels
 
         public NationalHoliday GetItemToEdit()
         {
-            //NationalHoliday item = new NationalHoliday();
-
             return NationalHoliday;
         }
     }

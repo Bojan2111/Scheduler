@@ -9,6 +9,47 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <ListView Grid.Row="0"
+                  ItemsSource="{Binding Teams}"
+                  SelectedItem="{Binding SelectedTeam}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Team Name" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Shift Pattern" DisplayMemberBinding="{Binding ShiftPattern}"/>
+                    <GridViewColumn Header="Current Month" DisplayMemberBinding="{Binding CurrentMonth}"/>
+                    <GridViewColumn Header="Start Date" DisplayMemberBinding="{Binding CurrentStartDate}"/>
+                    <GridViewColumn Header="" DisplayMemberBinding="{Binding NextMonthStartDate}"/>
+                    <GridViewColumn Header="Next Month Starts with N">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding NextMonthStartsWithNight}" IsEnabled="False" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Edit" Click="EditButton_Click" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Delete" Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType={x:Type ListView}}}" 
+                                    CommandParameter="{Binding}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+    <!--<Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <DataGrid Grid.Row="0" ItemsSource="{Binding Teams}" CanUserAddRows="False" IsReadOnly="True" AutoGenerateColumns="False" SelectedItem="{Binding SelectedTeam}">
@@ -22,10 +63,10 @@
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Content="Edit" Click="EditButton_Click" />
+                            <Button Content="Edit" Click="EditButton_Click" />-->
                             <!--<Button Content="Edit" Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" 
                     CommandParameter="{Binding}" />-->
-                        </DataTemplate>
+                        <!--</DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
@@ -37,18 +78,18 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-            </DataGrid.Columns>
+            </DataGrid.Columns>-->
             <!--<DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Edit" Command="{Binding EditCommand}" />
                     <MenuItem Header="Delete" Command="{Binding DeleteCommand}" />
                 </ContextMenu>
             </DataGrid.ContextMenu>-->
-        </DataGrid>
+        <!--</DataGrid>
         <Button Grid.Row="1"
                 Content="Add New Team"
                 Height="20"
                 Width="100"
                 Click="AddButton_Click"/>
-    </Grid>
+    </Grid>-->
 </UserControl>
