@@ -120,6 +120,7 @@ namespace Scheduler.ViewModels
                             Id = employeeId,
                             EmployeeName = $"{employeeGroup.First().Employee.LastName} {employeeGroup.First().Employee.FirstName}",
                             EmployeeRole = employeeRole == "--" ? "" : employeeRole,
+                            IsRolePresent = employeeRole != "--",
                             Shifts = allShiftsInMonth,
                         };
 
@@ -150,6 +151,7 @@ namespace Scheduler.ViewModels
                         EmployeeId = shiftOnThatDay.EmployeeId,
                         Date = shiftOnThatDay.Date,
                         IsNotWorkDay = day.IsNotWorkDay,
+                        IsShiftPresent = true,
                     });
                 }
                 else

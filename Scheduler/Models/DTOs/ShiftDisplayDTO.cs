@@ -13,5 +13,6 @@ namespace Scheduler.Models.DTOs
         public int EmployeeId { get; set; }
         public DateTime Date { get; set; }
         public bool IsNotWorkDay { get; set; }
+        public bool IsShiftPresent { get; set; }
     }
 }
