@@ -40,7 +40,14 @@ namespace Scheduler.ViewModels
                 OnPropertyChanged(nameof(SelectedShift));
             }
         }
-        public ICommand DeleteCommand { get; }
+        public ICommand AddRoleCommand { get; set; }
+        public ICommand EditRoleCommand { get; set; }
+        public ICommand DeleteRoleCommand { get; set; }
+        public ICommand EditEmployeeCommand { get; set; }
+        public ICommand TransferEmployeeCommand { get; set; }
+        public ICommand AddShiftCommand { get; set; }
+        public ICommand EditShiftCommand { get; set; }
+        public ICommand DeleteShiftCommand { get; }
         public EditShiftDTO GetShiftToEdit()
         {
             EditShiftDTO editShift = new EditShiftDTO();
@@ -60,7 +67,14 @@ namespace Scheduler.ViewModels
             TeamSchedules = new ObservableCollection<TeamSchedule>();
             LoadContext();
 
-            DeleteCommand = new RelayCommand(DeleteShift);
+            AddRoleCommand = new RelayCommand(AddRole);
+            EditRoleCommand = new RelayCommand(EditRole);
+            DeleteRoleCommand = new RelayCommand(DeleteRole);
+            EditEmployeeCommand = new RelayCommand(EditEmployee);
+            TransferEmployeeCommand = new RelayCommand(TransferEmployee);
+            AddShiftCommand = new RelayCommand(AddShift);
+            EditShiftCommand = new RelayCommand(EditShift);
+            DeleteShiftCommand = new RelayCommand(DeleteShift);
         }
 
         private void LoadContext()
@@ -401,17 +415,67 @@ namespace Scheduler.ViewModels
             return currentStartDate.AddDays(lastDayOfMonth % 5 == 0 ? dateIncreaser : dateIncreaser - 1);
         }
 
-        private void DeleteShift()
+        // Command methods
+
+        private void AddRole(object parameter)
         {
-            var result = MessageBox.Show("This item will be permanently deleted from the database. Are you sure you want to do this?", "Delete Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            // This method should update the Employee's TeamRole Id to the selected one.
+            var employeeSchedule = parameter as EmployeeSchedule;
+            int employeeId = employeeSchedule.Id;
+            
+            Console.WriteLine(employeeSchedule);
+        }
 
-            if (result == MessageBoxResult.Yes)
-            {
-                _context.Shifts.Remove(SelectedShift);
-                _context.SaveChanges();
-            }
+        private void EditRole(object parameter)
+        {
+            // This method should update existing Employee in _context.Employees and update the role Id.
+            var employeeSchedule = parameter as EmployeeSchedule;
+            int employeeId = employeeSchedule.Id;
+            int employeeRoleId = _context.TeamRoles.FirstOrDefault(x => x.Name == employeeSchedule.EmployeeRole).Id;
+            Console.WriteLine(employeeSchedule);
+        }
 
-            LoadContext();
+        private void DeleteRole(object parameter)
+        {
+            // This method should update the TeamRoleId to 4, being a default value.
+            var employeeSchedule = parameter as EmployeeSchedule;
+            int employeeId = employeeSchedule.Id;
+            Employee employee = _context.Employees.FirstOrDefault(x => x.Id == employeeId);
+            //_context.Employees.Update(employee);
+        }
+
+        private void TransferEmployee(object parameter)
+        {
+            Console.WriteLine(parameter);
+        }
+
+        private void EditEmployee(object parameter)
+        {
+            Console.WriteLine(parameter);
+        }
+
+        private void AddShift(object parameter)
+        {
+            Console.WriteLine(parameter);
+        }
+
+        private void EditShift(object parameter)
+        {
+            Console.WriteLine(parameter);
+        }
+
+        private void DeleteShift(object parameter)
+        {
+            Console.WriteLine(parameter);
+            //var result = MessageBox.Show("This item will be permanently deleted from the database. Are you sure you want to do this?", "Delete Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+            //if (result == MessageBoxResult.Yes)
+            //{
+            //    _context.Shifts.Remove(SelectedShift);
+            //    _context.SaveChanges();
+            //}
+
+            //LoadContext();
         }
     }
 }

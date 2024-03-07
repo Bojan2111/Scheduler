@@ -9,12 +9,12 @@ namespace Scheduler.Logic
 {
     public class RelayCommand : ICommand
     {
-        private readonly Action _execute;
+        private readonly Action<object> _execute;
         private readonly Func<bool> _canExecute;
 
         public event EventHandler CanExecuteChanged;
 
-        public RelayCommand(Action execute, Func<bool> canExecute = null)
+        public RelayCommand(Action<object> execute, Func<bool> canExecute = null)
         {
             _execute = execute ?? throw new ArgumentNullException(nameof(execute));
             _canExecute = canExecute;
@@ -27,7 +27,7 @@ namespace Scheduler.Logic
 
         public void Execute(object parameter)
         {
-            _execute();
+            _execute(parameter);
         }
 
         public void RaiseCanExecuteChanged()

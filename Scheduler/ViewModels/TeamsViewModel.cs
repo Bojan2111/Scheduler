@@ -79,7 +79,7 @@ namespace Scheduler.ViewModels
             Teams = new ObservableCollection<Team>(_context.Teams);
         }
 
-        private void DeleteTeam()
+        private void DeleteTeam(object parameter)
         {
             var result = MessageBox.Show("This item will be permanently deleted from the database. Are you sure you want to do this?", "Delete Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 

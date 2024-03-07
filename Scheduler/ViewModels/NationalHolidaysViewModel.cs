@@ -51,7 +51,7 @@ namespace Scheduler.ViewModels
             NationalHolidays = new ObservableCollection<NationalHoliday>(_context.NationalHolidays);
         }
 
-        private void DeleteNationalHoliday()
+        private void DeleteNationalHoliday(object parameter)
         {
             var result = MessageBox.Show("This item will be permanently deleted from the database. Are you sure you want to do this?", "Delete Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
