@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows;
 using Microsoft.EntityFrameworkCore;
+using Scheduler.Views;
 
 namespace Scheduler.ViewModels
 {
@@ -422,8 +423,47 @@ namespace Scheduler.ViewModels
             // This method should update the Employee's TeamRole Id to the selected one.
             var employeeSchedule = parameter as EmployeeSchedule;
             int employeeId = employeeSchedule.Id;
-            
-            Console.WriteLine(employeeSchedule);
+            EmployeeRoleEditDTO employeeRoleEditDTO = new EmployeeRoleEditDTO();
+            employeeRoleEditDTO.Roles = new List<DataOptionsItem>();
+            employeeRoleEditDTO.Id = employeeId;
+            employeeRoleEditDTO.EmployeeName = employeeSchedule.EmployeeName;
+            employeeRoleEditDTO.EmployeeRole = employeeSchedule.EmployeeRole;
+
+            List<TeamRole> roles = _context.TeamRoles.ToList();
+            foreach (var role in roles)
+            {
+                employeeRoleEditDTO.Roles.Add(new DataOptionsItem()
+                {
+                    Value = role.Name,
+                    DisplayText = role.Description,
+                });
+            }
+
+            // Create and show the new window
+            RoleEditorViewModel roleEditorViewModel = new RoleEditorViewModel();
+            roleEditorViewModel.EmployeeRoleDTO = employeeRoleEditDTO;
+
+            RoleEditorWindow roleEditorWindow = new RoleEditorWindow();
+            roleEditorWindow.DataContext = roleEditorViewModel;
+
+            roleEditorViewModel.CloseAction = () => roleEditorWindow.Close();
+
+            roleEditorWindow.ShowDialog();
+
+            // Retrieve the updated data from the ViewModel
+            EmployeeRoleEditDTO updatedEmployeeRole = roleEditorViewModel.EmployeeRoleDTO;
+            TeamRole updatedRole = _context.TeamRoles.FirstOrDefault(x => x.Name == updatedEmployeeRole.EmployeeRole);
+            Employee employeeToUpdate = _context.Employees.FirstOrDefault(x => x.Id == updatedEmployeeRole.Id);
+            if (employeeToUpdate != null)
+            {
+                employeeToUpdate.TeamRoleId = updatedRole.Id;
+                employeeToUpdate.TeamRole = updatedRole;
+                _context.Employees.Update(employeeToUpdate);
+                _context.SaveChanges();
+            }
+            Console.WriteLine(updatedEmployeeRole);
+            Console.WriteLine(employeeToUpdate);
+            // Update the database or perform any other necessary actions
         }
 
         private void EditRole(object parameter)
