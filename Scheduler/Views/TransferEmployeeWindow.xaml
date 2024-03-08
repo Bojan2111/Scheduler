@@ -1,0 +1,41 @@
+﻿<Window x:Class="Scheduler.Views.TransferEmployeeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Scheduler.Views"
+        mc:Ignorable="d"
+        Title="TransferEmployeeWindow" Height="450" Width="400">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <!-- Bind controls to properties of RoleEditorViewModel -->
+            <TextBlock Text="Transfer "/>
+            <TextBlock Text="{Binding TransferEmployee.Employee}" />
+            <TextBlock Text=" to another team"/>
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="Team: "/>
+
+            <ComboBox Grid.Column="1"
+                      ItemsSource="{Binding TransferEmployee.Teams}" 
+                      DisplayMemberPath="DisplayText" 
+                      SelectedValuePath="Value" 
+                      SelectedValue="{Binding TransferEmployee.SelectedTeamValue}" />
+        </Grid>
+
+        <!--<ComboBox Grid.Row="1" ItemsSource="{Binding EmployeeRoleDTO.Roles}"/>-->
+
+        <Button Grid.Row="2" Content="Save Changes" Command="{Binding SaveChangesCommand}" />
+    </Grid>
+</Window>

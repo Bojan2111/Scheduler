@@ -130,6 +130,7 @@ namespace Scheduler.ViewModels
                             EmployeeName = $"{employeeGroup.First().Employee.LastName} {employeeGroup.First().Employee.FirstName}",
                             EmployeeRole = employeeRole == "--" ? "" : employeeRole,
                             IsRolePresent = employeeRole != "--",
+                            TeamId = teamId,
                             Shifts = allShiftsInMonth,
                         };
 
@@ -467,7 +468,51 @@ namespace Scheduler.ViewModels
         {
             var employeeSchedule = parameter as EmployeeSchedule;
             int employeeId = employeeSchedule.Id;
-            Console.WriteLine(employeeId);
+            Employee employee = _context.Employees.FirstOrDefault(x => x.Id == employeeId);
+            List<Team> teams = _context.Teams.ToList();
+            TransferEmployeeDTO transferEmployee = new TransferEmployeeDTO()
+            {
+                Employee = employeeSchedule.EmployeeName,
+                SelectedTeamValue = employeeSchedule.TeamId.ToString(),
+                Teams = new List<DataOptionsItem>()
+            };
+            foreach (var team in teams)
+            {
+                transferEmployee.Teams.Add(new DataOptionsItem()
+                {
+                    Value = team.Id.ToString(),
+                    DisplayText = team.Name,
+                });
+            }
+            
+
+            TransferEmployeeViewModel transferViewModel = new TransferEmployeeViewModel();
+            transferViewModel.TransferEmployee = transferEmployee;
+
+            TransferEmployeeWindow transferEmployeeWindow = new TransferEmployeeWindow();
+            transferEmployeeWindow.DataContext = transferViewModel;
+
+            transferViewModel.CloseAction = () => transferEmployeeWindow.Close();
+
+            transferEmployeeWindow.ShowDialog();
+
+            // Retrieve the updated data from the ViewModel
+            TransferEmployeeDTO updatedTransfer = transferViewModel.TransferEmployee;
+            Console.WriteLine(updatedTransfer);
+            int updatedTeamId = Int32.Parse(updatedTransfer.SelectedTeamValue);
+            Team updatedTeam = _context.Teams.FirstOrDefault(x => x.Id == updatedTeamId);
+
+            employee.TeamId = updatedTeamId;
+            employee.Team = updatedTeam;
+            try
+            {
+                _context.Update(employee);
+                _context.SaveChanges();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         private void AddShift(object parameter)
