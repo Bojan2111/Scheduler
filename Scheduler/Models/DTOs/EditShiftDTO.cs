@@ -10,7 +10,9 @@ namespace Scheduler.Models.DTOs
     {
         public int Id { get; set; }
         public int EmployeeId { get; set; }
+        public string EmployeeName { get; set; }
         public DateTime Date { get; set; }
+        public string Name { get; set; }
         public int Month { get; set; }
         public List<DataOptionsItem> ShiftOptions { get; set; }
 

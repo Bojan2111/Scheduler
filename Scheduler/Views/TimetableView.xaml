@@ -141,7 +141,7 @@
                                                                 <TextBlock.ContextMenu>
                                                                     <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
                                                                         <MenuItem Header="Add Shift"
-                                                                                  Command="{Binding AddShiftCommand, Source={StaticResource TimetableViewModelInstance}}"
+                                                                                  Command="{Binding EditShiftCommand, Source={StaticResource TimetableViewModelInstance}}"
                                                                                   CommandParameter="{Binding}"
                                                                                   Visibility="{Binding IsShiftPresent, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
                                                                         <MenuItem Header="Edit Shift"

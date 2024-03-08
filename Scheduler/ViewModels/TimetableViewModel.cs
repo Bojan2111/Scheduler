@@ -20,7 +20,7 @@ namespace Scheduler.ViewModels
 
         private ObservableCollection<TeamSchedule> _teamSchedules;
 
-        private Shift _selectedShift;
+        //private Shift _selectedShift;
 
         public ObservableCollection<TeamSchedule> TeamSchedules
         {
@@ -32,33 +32,33 @@ namespace Scheduler.ViewModels
             }
         }
 
-        public Shift SelectedShift
-        {
-            get { return _selectedShift; }
-            set
-            {
-                _selectedShift = value;
-                OnPropertyChanged(nameof(SelectedShift));
-            }
-        }
+        //public Shift SelectedShift
+        //{
+        //    get { return _selectedShift; }
+        //    set
+        //    {
+        //        _selectedShift = value;
+        //        OnPropertyChanged(nameof(SelectedShift));
+        //    }
+        //}
         public ICommand EditRoleCommand { get; set; }
         public ICommand TransferEmployeeCommand { get; set; }
-        public ICommand AddShiftCommand { get; set; }
+        //public ICommand AddShiftCommand { get; set; }
         public ICommand EditShiftCommand { get; set; }
         public ICommand DeleteShiftCommand { get; }
-        public EditShiftDTO GetShiftToEdit()
-        {
-            EditShiftDTO editShift = new EditShiftDTO();
+        //public EditShiftDTO GetShiftToEdit()
+        //{
+        //    EditShiftDTO editShift = new EditShiftDTO();
             
-            return editShift;
-        }
+        //    return editShift;
+        //}
 
-        public EditShiftDTO GetEmptyShift()
-        {
-            EditShiftDTO emptyTeam = new EditShiftDTO();
+        //public EditShiftDTO GetEmptyShift()
+        //{
+        //    EditShiftDTO emptyTeam = new EditShiftDTO();
 
-            return emptyTeam;
-        }
+        //    return emptyTeam;
+        //}
         public TimetableViewModel()
         {
             _context = new SchedulerDbContext();
@@ -67,7 +67,7 @@ namespace Scheduler.ViewModels
 
             EditRoleCommand = new RelayCommand(EditRole);
             TransferEmployeeCommand = new RelayCommand(TransferEmployee);
-            AddShiftCommand = new RelayCommand(AddShift);
+            //AddShiftCommand = new RelayCommand(AddShift);
             EditShiftCommand = new RelayCommand(EditShift);
             DeleteShiftCommand = new RelayCommand(DeleteShift);
         }
@@ -506,7 +506,7 @@ namespace Scheduler.ViewModels
             employee.Team = updatedTeam;
             try
             {
-                _context.Update(employee);
+                _context.Employees.Update(employee);
                 _context.SaveChanges();
             }
             catch (Exception)
@@ -515,36 +515,93 @@ namespace Scheduler.ViewModels
             }
         }
 
-        private void AddShift(object parameter)
+        private void EditShift(object parameter)
         {
             // Selected date is correct: Date
             // Name is "".
             var shiftDisplay = parameter as ShiftDisplayDTO;
-            Console.WriteLine(shiftDisplay);
+            int employeeId = shiftDisplay.EmployeeId;
+            Employee employee = _context.Employees.FirstOrDefault(x => x.Id == employeeId);
+            string employeeName = $"{employee.LastName} {employee.FirstName}";
+            EditShiftDTO shiftToEdit = new EditShiftDTO()
+            {
+                Id = shiftDisplay.Id,
+                Name = shiftDisplay.Name,
+                EmployeeId = employeeId,
+                EmployeeName = employeeName,
+                Date = shiftDisplay.Date,
+                Month = shiftDisplay.Date.Month
+            };
+
+            EditShiftViewModel editShiftViewModel = new EditShiftViewModel();
+            editShiftViewModel.EditShift = shiftToEdit;
+
+            EditShiftWindow editShiftWindow = new EditShiftWindow();
+            editShiftWindow.DataContext = editShiftViewModel;
+
+            editShiftViewModel.CloseAction = () => editShiftWindow.Close();
+
+            editShiftWindow.ShowDialog();
+
+            // Retrieve the updated data from the ViewModel
+            EditShiftDTO updatedShift = editShiftViewModel.EditShift;
+            Shift newShift;
+            if (updatedShift.Id > 0)
+            {
+                newShift = _context.Shifts.FirstOrDefault(x => x.Id == updatedShift.Id);
+                if (updatedShift.Name != newShift.Name)
+                {
+                    newShift.Name = updatedShift.Name;
+                    _context.Shifts.Update(newShift);
+                }
+                
+                Console.WriteLine(newShift.Name);
+            }
+            else
+            {
+                if (updatedShift.Name != shiftDisplay.Name)
+                {
+                    newShift = new Shift()
+                    {
+                        Name = updatedShift.Name,
+                        Date = updatedShift.Date,
+                        Month = updatedShift.Month,
+                        EmployeeId = updatedShift.EmployeeId,
+                        Employee = employee,
+                    };
+
+                
+                    _context.Shifts.Add(newShift);
+                }
+            }
         }
 
-        private void EditShift(object parameter)
-        {
-            // shift ID = shiftDisplay.Id
-            // employee ID = shiftDisplay.EmployeeId
-            // other: Date, Name
-            var shiftDisplay = parameter as ShiftDisplayDTO;
-            Console.WriteLine(shiftDisplay);
-        }
+        //private void EditShift(object parameter)
+        //{
+        //    // shift ID = shiftDisplay.Id
+        //    // employee ID = shiftDisplay.EmployeeId
+        //    // other: Date, Name
+        //    var shiftDisplay = parameter as ShiftDisplayDTO;
+        //    Console.WriteLine(shiftDisplay);
+        //}
 
         private void DeleteShift(object parameter)
         {
             var shiftDisplay = parameter as ShiftDisplayDTO;
-            Console.WriteLine(shiftDisplay);
-            //var result = MessageBox.Show("This item will be permanently deleted from the database. Are you sure you want to do this?", "Delete Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            Shift selectedShift = _context.Shifts.FirstOrDefault(x => x.Id == shiftDisplay.Id);
 
-            //if (result == MessageBoxResult.Yes)
-            //{
-            //    _context.Shifts.Remove(SelectedShift);
-            //    _context.SaveChanges();
-            //}
+            if (selectedShift != null)
+            {
+                var result = MessageBox.Show("This item will be permanently deleted from the database. Are you sure you want to do this?", "Delete Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
-            //LoadContext();
+                if (result == MessageBoxResult.Yes)
+                {
+                    _context.Shifts.Remove(selectedShift);
+                    _context.SaveChanges();
+                }
+
+                LoadContext();
+            }
         }
     }
 }
