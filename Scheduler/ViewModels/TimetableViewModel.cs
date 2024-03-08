@@ -41,10 +41,7 @@ namespace Scheduler.ViewModels
                 OnPropertyChanged(nameof(SelectedShift));
             }
         }
-        public ICommand AddRoleCommand { get; set; }
         public ICommand EditRoleCommand { get; set; }
-        public ICommand DeleteRoleCommand { get; set; }
-        public ICommand EditEmployeeCommand { get; set; }
         public ICommand TransferEmployeeCommand { get; set; }
         public ICommand AddShiftCommand { get; set; }
         public ICommand EditShiftCommand { get; set; }
@@ -68,10 +65,7 @@ namespace Scheduler.ViewModels
             TeamSchedules = new ObservableCollection<TeamSchedule>();
             LoadContext();
 
-            AddRoleCommand = new RelayCommand(AddRole);
             EditRoleCommand = new RelayCommand(EditRole);
-            DeleteRoleCommand = new RelayCommand(DeleteRole);
-            EditEmployeeCommand = new RelayCommand(EditEmployee);
             TransferEmployeeCommand = new RelayCommand(TransferEmployee);
             AddShiftCommand = new RelayCommand(AddShift);
             EditShiftCommand = new RelayCommand(EditShift);
@@ -418,7 +412,7 @@ namespace Scheduler.ViewModels
 
         // Command methods
 
-        private void AddRole(object parameter)
+        private void EditRole(object parameter)
         {
             // This method should update the Employee's TeamRole Id to the selected one.
             var employeeSchedule = parameter as EmployeeSchedule;
@@ -461,52 +455,42 @@ namespace Scheduler.ViewModels
                 _context.Employees.Update(employeeToUpdate);
                 _context.SaveChanges();
             }
-            Console.WriteLine(updatedEmployeeRole);
-            Console.WriteLine(employeeToUpdate);
-            // Update the database or perform any other necessary actions
-        }
+            else
+            {
+                throw new ArgumentNullException(nameof(employeeToUpdate));
+            }
 
-        private void EditRole(object parameter)
-        {
-            // This method should update existing Employee in _context.Employees and update the role Id.
-            var employeeSchedule = parameter as EmployeeSchedule;
-            int employeeId = employeeSchedule.Id;
-            int employeeRoleId = _context.TeamRoles.FirstOrDefault(x => x.Name == employeeSchedule.EmployeeRole).Id;
-            Console.WriteLine(employeeSchedule);
-        }
-
-        private void DeleteRole(object parameter)
-        {
-            // This method should update the TeamRoleId to 4, being a default value.
-            var employeeSchedule = parameter as EmployeeSchedule;
-            int employeeId = employeeSchedule.Id;
-            Employee employee = _context.Employees.FirstOrDefault(x => x.Id == employeeId);
-            //_context.Employees.Update(employee);
+            LoadContext();
         }
 
         private void TransferEmployee(object parameter)
         {
-            Console.WriteLine(parameter);
-        }
-
-        private void EditEmployee(object parameter)
-        {
-            Console.WriteLine(parameter);
+            var employeeSchedule = parameter as EmployeeSchedule;
+            int employeeId = employeeSchedule.Id;
+            Console.WriteLine(employeeId);
         }
 
         private void AddShift(object parameter)
         {
-            Console.WriteLine(parameter);
+            // Selected date is correct: Date
+            // Name is "".
+            var shiftDisplay = parameter as ShiftDisplayDTO;
+            Console.WriteLine(shiftDisplay);
         }
 
         private void EditShift(object parameter)
         {
-            Console.WriteLine(parameter);
+            // shift ID = shiftDisplay.Id
+            // employee ID = shiftDisplay.EmployeeId
+            // other: Date, Name
+            var shiftDisplay = parameter as ShiftDisplayDTO;
+            Console.WriteLine(shiftDisplay);
         }
 
         private void DeleteShift(object parameter)
         {
-            Console.WriteLine(parameter);
+            var shiftDisplay = parameter as ShiftDisplayDTO;
+            Console.WriteLine(shiftDisplay);
             //var result = MessageBox.Show("This item will be permanently deleted from the database. Are you sure you want to do this?", "Delete Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             //if (result == MessageBoxResult.Yes)

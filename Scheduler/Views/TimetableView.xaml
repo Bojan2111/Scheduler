@@ -99,24 +99,18 @@
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock Grid.Column="0" Width="150" Margin="0 5" Text="{Binding EmployeeName}">
                                                     <TextBlock.ContextMenu>
-                                                        <ContextMenu>
-                                                            <MenuItem Header="Edit Employee" Command="{Binding EditEmployeeCommand}"/>
-                                                            <MenuItem Header="Transfer Employee" Command="{Binding TransferEmployeeCommand}"/>
+                                                        <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                                            <MenuItem Header="Transfer Employee"
+                                                                      Command="{Binding TransferEmployeeCommand, Source={StaticResource TimetableViewModelInstance}}"
+                                                                      CommandParameter="{Binding}"/>
                                                         </ContextMenu>
                                                     </TextBlock.ContextMenu>
                                                 </TextBlock>
                                                 <TextBlock Grid.Column="1" Width="30" Margin="0 5" Text="{Binding EmployeeRole}">
                                                     <TextBlock.ContextMenu>
                                                         <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
-                                                            <MenuItem Header="Add Role" Command="{Binding AddRoleCommand, Source={StaticResource TimetableViewModelInstance}}" CommandParameter="{Binding}" Visibility="{Binding IsRolePresent, Converter={StaticResource InverseBooleanToVisibilityConverter}}" />
-                                                            <MenuItem Header="Edit Role" Command="{Binding EditRoleCommand, Source={StaticResource TimetableViewModelInstance}}" Visibility="{Binding IsRolePresent, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                                                            <MenuItem Header="Delete Role" Command="{Binding DeleteRoleCommand, Source={StaticResource TimetableViewModelInstance}}" Visibility="{Binding IsRolePresent, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                                            <MenuItem Header="Edit Role" Command="{Binding EditRoleCommand, Source={StaticResource TimetableViewModelInstance}}" CommandParameter="{Binding}"/>
                                                         </ContextMenu>
-                                                        <!--<ContextMenu>
-                                                            <MenuItem Header="Add Role" Command="{Binding AddRoleCommand}" Visibility="{Binding IsRolePresent, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
-                                                            <MenuItem Header="Edit Role" Command="{Binding EditRoleCommand}" Visibility="{Binding IsRolePresent, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                                                            <MenuItem Header="Delete Role" Command="{Binding DeleteRoleCommand}" Visibility="{Binding IsRolePresent, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                                                        </ContextMenu>-->
                                                     </TextBlock.ContextMenu>
                                                 </TextBlock>
 
@@ -145,11 +139,19 @@
                                                                     </Style>
                                                                 </TextBlock.Style>
                                                                 <TextBlock.ContextMenu>
-                                                                    <ContextMenu>
-                                                                        <!-- TODO: Add the following commands to ViewModel -->
-                                                                        <MenuItem Header="Add Shift" Command="{Binding AddShiftCommand}" Visibility="{Binding IsShiftPresent, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
-                                                                        <MenuItem Header="Edit Shift" Command="{Binding EditShiftCommand}" Visibility="{Binding IsShiftPresent, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                                                                        <MenuItem Header="Delete Shift" Command="{Binding DeleteShiftCommand}" Visibility="{Binding IsShiftPresent, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                                                    <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                                                        <MenuItem Header="Add Shift"
+                                                                                  Command="{Binding AddShiftCommand, Source={StaticResource TimetableViewModelInstance}}"
+                                                                                  CommandParameter="{Binding}"
+                                                                                  Visibility="{Binding IsShiftPresent, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
+                                                                        <MenuItem Header="Edit Shift"
+                                                                                  Command="{Binding EditShiftCommand, Source={StaticResource TimetableViewModelInstance}}"
+                                                                                  CommandParameter="{Binding}"
+                                                                                  Visibility="{Binding IsShiftPresent, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                                                        <MenuItem Header="Delete Shift"
+                                                                                  Command="{Binding DeleteShiftCommand, Source={StaticResource TimetableViewModelInstance}}"
+                                                                                  CommandParameter="{Binding}"
+                                                                                  Visibility="{Binding IsShiftPresent, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                                                                     </ContextMenu>
                                                                 </TextBlock.ContextMenu>
                                                             </TextBlock>
