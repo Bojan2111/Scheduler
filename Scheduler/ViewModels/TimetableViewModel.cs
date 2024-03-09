@@ -20,8 +20,6 @@ namespace Scheduler.ViewModels
 
         private ObservableCollection<TeamSchedule> _teamSchedules;
 
-        //private Shift _selectedShift;
-
         public ObservableCollection<TeamSchedule> TeamSchedules
         {
             get { return _teamSchedules; }
@@ -32,33 +30,11 @@ namespace Scheduler.ViewModels
             }
         }
 
-        //public Shift SelectedShift
-        //{
-        //    get { return _selectedShift; }
-        //    set
-        //    {
-        //        _selectedShift = value;
-        //        OnPropertyChanged(nameof(SelectedShift));
-        //    }
-        //}
         public ICommand EditRoleCommand { get; set; }
         public ICommand TransferEmployeeCommand { get; set; }
-        //public ICommand AddShiftCommand { get; set; }
         public ICommand EditShiftCommand { get; set; }
         public ICommand DeleteShiftCommand { get; }
-        //public EditShiftDTO GetShiftToEdit()
-        //{
-        //    EditShiftDTO editShift = new EditShiftDTO();
-            
-        //    return editShift;
-        //}
 
-        //public EditShiftDTO GetEmptyShift()
-        //{
-        //    EditShiftDTO emptyTeam = new EditShiftDTO();
-
-        //    return emptyTeam;
-        //}
         public TimetableViewModel()
         {
             _context = new SchedulerDbContext();
@@ -575,15 +551,6 @@ namespace Scheduler.ViewModels
                 }
             }
         }
-
-        //private void EditShift(object parameter)
-        //{
-        //    // shift ID = shiftDisplay.Id
-        //    // employee ID = shiftDisplay.EmployeeId
-        //    // other: Date, Name
-        //    var shiftDisplay = parameter as ShiftDisplayDTO;
-        //    Console.WriteLine(shiftDisplay);
-        //}
 
         private void DeleteShift(object parameter)
         {
