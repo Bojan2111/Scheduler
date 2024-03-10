@@ -391,7 +391,6 @@ namespace Scheduler.ViewModels
 
         private void EditRole(object parameter)
         {
-            // This method should update the Employee's TeamRole Id to the selected one.
             var employeeSchedule = parameter as EmployeeSchedule;
             int employeeId = employeeSchedule.Id;
             EmployeeRoleEditDTO employeeRoleEditDTO = new EmployeeRoleEditDTO();
@@ -410,7 +409,6 @@ namespace Scheduler.ViewModels
                 });
             }
 
-            // Create and show the new window
             RoleEditorViewModel roleEditorViewModel = new RoleEditorViewModel();
             roleEditorViewModel.EmployeeRoleDTO = employeeRoleEditDTO;
 
@@ -421,7 +419,6 @@ namespace Scheduler.ViewModels
 
             roleEditorWindow.ShowDialog();
 
-            // Retrieve the updated data from the ViewModel
             EmployeeRoleEditDTO updatedEmployeeRole = roleEditorViewModel.EmployeeRoleDTO;
             TeamRole updatedRole = _context.TeamRoles.FirstOrDefault(x => x.Name == updatedEmployeeRole.EmployeeRole);
             Employee employeeToUpdate = _context.Employees.FirstOrDefault(x => x.Id == updatedEmployeeRole.Id);
@@ -485,16 +482,14 @@ namespace Scheduler.ViewModels
                 _context.Employees.Update(employee);
                 _context.SaveChanges();
             }
-            catch (Exception)
+            catch (DbUpdateConcurrencyException ex)
             {
-                throw;
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void EditShift(object parameter)
         {
-            // Selected date is correct: Date
-            // Name is "".
             var shiftDisplay = parameter as ShiftDisplayDTO;
             int employeeId = shiftDisplay.EmployeeId;
             Employee employee = _context.Employees.FirstOrDefault(x => x.Id == employeeId);
@@ -519,7 +514,6 @@ namespace Scheduler.ViewModels
 
             editShiftWindow.ShowDialog();
 
-            // Retrieve the updated data from the ViewModel
             EditShiftDTO updatedShift = editShiftViewModel.EditShift;
             Shift newShift;
             if (updatedShift.Id > 0)
@@ -530,8 +524,6 @@ namespace Scheduler.ViewModels
                     newShift.Name = updatedShift.Name;
                     _context.Shifts.Update(newShift);
                 }
-                
-                Console.WriteLine(newShift.Name);
             }
             else
             {
@@ -549,6 +541,14 @@ namespace Scheduler.ViewModels
                 
                     _context.Shifts.Add(newShift);
                 }
+            }
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
